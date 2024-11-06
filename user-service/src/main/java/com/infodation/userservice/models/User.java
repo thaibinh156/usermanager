@@ -9,14 +9,14 @@ import lombok.Setter;
 
 import java.util.UUID;
 
-@Entity
+@Entity(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id")
     @JsonAlias("id")
     private UUID id;
@@ -32,6 +32,10 @@ public class User {
     @Column(name = "last_name")
     @JsonAlias("lastName")
     private String lastName;
+
+    @Column(name = "sex")
+    @JsonAlias("sex")
+    private Sex sex;
 
     @Column(name = "email")
     @JsonAlias("email")
