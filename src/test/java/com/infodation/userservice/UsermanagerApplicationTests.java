@@ -1,4 +1,4 @@
-package com.infodation.usermanager;
+package com.infodation.userservice;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
