@@ -26,7 +26,7 @@ public class User {
     private String userId;
 
     @Column(name = "first_name")
-    @JsonAlias("first_name")
+    @JsonAlias("firstName")
     private String firstName;
 
     @Column(name = "last_name")
