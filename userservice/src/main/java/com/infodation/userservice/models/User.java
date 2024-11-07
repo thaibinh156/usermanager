@@ -1,20 +1,26 @@
 package com.infodation.userservice.models;
 
-import jakarta.persistence.Id;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import javax.persistence.*;
+import java.io.Serializable;
 
-@Entity
-public class User {
+@Entity(name = "users")
+public class User implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
+    @Column(name = "user_id")
     private String userId;
+    @Column(name = "first_name")
     private String firstName;
+    @Column(name = "last_name")
     private String lastName;
+    @Enumerated(EnumType.STRING)
     private Sex sex;
+    @Column(name = "email")
     private String email;
 
     public User(Long id, String email, Sex sex, String lastName, String userId, String firstName) {
