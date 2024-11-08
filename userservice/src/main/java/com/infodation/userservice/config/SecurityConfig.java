@@ -14,11 +14,7 @@ public class SecurityConfig {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/api/users").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/users/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/api/users").permitAll()
-                .antMatchers(HttpMethod.PUT, "/api/users/**").permitAll()
-                .antMatchers(HttpMethod.DELETE, "/api/users/**").permitAll()
+                .antMatchers("/api/users/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic(Customizer.withDefaults());

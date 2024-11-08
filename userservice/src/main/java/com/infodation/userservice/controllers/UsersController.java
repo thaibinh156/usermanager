@@ -3,9 +3,8 @@ package com.infodation.userservice.controllers;
 import com.infodation.userservice.models.User;
 import com.infodation.userservice.models.dto.user.CreateUserDTO;
 import com.infodation.userservice.models.dto.user.UpdateUserDTO;
-import com.infodation.userservice.services.UserService;
+import com.infodation.userservice.services.iservice.IUserService;
 import com.infodation.userservice.utils.ApiResponse;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -21,8 +20,11 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/users")
 public class UsersController {
-    @Autowired
-    private UserService userService;
+    private final IUserService userService;
+
+    public UsersController(IUserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<User>>> getUsers() {

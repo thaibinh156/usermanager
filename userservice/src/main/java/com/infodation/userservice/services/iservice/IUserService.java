@@ -9,7 +9,7 @@ import java.util.List;
 public interface IUserService {
     List<User> getAll();
     User getByUserId(String userId);
-    User save(CreateUserDTO user) throws Exception;
+    User save(CreateUserDTO user);
     User update(String userId,UpdateUserDTO user);
     void delete(String userId);
 }

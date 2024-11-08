@@ -5,18 +5,18 @@ import com.infodation.userservice.models.dto.user.CreateUserDTO;
 import com.infodation.userservice.models.dto.user.UpdateUserDTO;
 import com.infodation.userservice.repositories.UserRepository;
 import com.infodation.userservice.services.iservice.IUserService;
-import com.infodation.userservice.utils.ApiResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public class UserService implements IUserService {
-    @Autowired
-    UserRepository userRepository;
+public class UserServiceImpl implements IUserService {
+
+    private final UserRepository userRepository;
+
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public List<User> getAll() {

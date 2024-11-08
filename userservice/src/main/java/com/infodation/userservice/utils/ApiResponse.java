@@ -5,8 +5,7 @@ import lombok.*;
 import java.time.LocalDateTime;
 
 @Builder
-@Setter
-@Getter
+@Data
 public class ApiResponse<T> {
     private LocalDateTime timestamp;
     private String error;
