@@ -13,11 +13,13 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/api/users/**").permitAll()
-                .anyRequest().authenticated()
-                .and()
-                .httpBasic(Customizer.withDefaults());
+                .authorizeRequests(auth -> {
+                    auth.antMatchers("/hello").permitAll();
+                    auth.antMatchers("/users/**").permitAll();
+                    auth.anyRequest().authenticated();
+                })
+                .oauth2Login(Customizer.withDefaults())
+                .formLogin(Customizer.withDefaults());
 
         return http.build();
     }
