@@ -4,9 +4,9 @@ import com.infodation.userservice.models.Sex;
 import lombok.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @Data
 @NoArgsConstructor
@@ -24,7 +24,7 @@ public class UpdateUserDTO {
 
     @NotNull(message = "Email is required")
     @NotBlank(message = "Email is required")
-    @Email(message = "Email is invalid")
+    @Pattern(regexp = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", message = "Invalid email format")
     private String email;
 
     @NotNull(message = "Sex is required")
