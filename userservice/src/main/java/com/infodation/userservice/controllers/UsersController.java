@@ -98,7 +98,7 @@ public class UsersController {
         } else {
             userService.delete(userId);
             status = HttpStatus.OK;
-            message =  String.format("User with ID %s not found", userId);
+            message =  String.format("Deleted user with ID %s", userId);
         }
 
         ApiResponse<?> response = ApiResponseUtil.buildApiResponse(null, status, message, null);
