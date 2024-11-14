@@ -7,6 +7,7 @@ import com.infodation.userservice.repositories.UserRepository;
 import com.infodation.userservice.services.iservice.IUserService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -30,13 +31,15 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public User save(CreateUserDTO user) {
-
         User newUser = new User();
         newUser.setUserId(user.getUserId());
         newUser.setFirstName(user.getFirstName());
         newUser.setLastName(user.getLastName());
         newUser.setEmail(user.getEmail());
         newUser.setSex(user.getSex());
+        newUser.setCreatedAt(LocalDateTime.now());
+        newUser.setUpdatedAt(LocalDateTime.now());
+
         return userRepository.save(newUser);
     }
 
@@ -52,7 +55,7 @@ public class UserServiceImpl implements IUserService {
         userToUpdate.setLastName(user.getLastName());
         userToUpdate.setEmail(user.getEmail());
         userToUpdate.setSex(user.getSex());
-
+        userToUpdate.setUpdatedAt(LocalDateTime.now());
         return userRepository.save(userToUpdate);
     }
 
