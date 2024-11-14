@@ -5,6 +5,9 @@ import com.infodation.userservice.models.dto.user.CreateUserDTO;
 import com.infodation.userservice.models.dto.user.UpdateUserDTO;
 import com.infodation.userservice.services.iservice.IUserService;
 import com.infodation.userservice.utils.ApiResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -28,9 +31,14 @@ public class UsersController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<User>>> getUsers() {
-        List<User> users = userService.getAll();
-        ApiResponse<List<User>> apiResponse = ApiResponseUtil.buildApiResponse(users, HttpStatus.OK, "Users fetched successfully", null);
+    public ResponseEntity<ApiResponse<Page<User>>> getUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "2") int size)
+    {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<User> users = userService.getAll(pageable);
+
+        ApiResponse<Page<User>> apiResponse = ApiResponseUtil.buildApiResponse(users, HttpStatus.OK, "Users fetched successfully", null);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 

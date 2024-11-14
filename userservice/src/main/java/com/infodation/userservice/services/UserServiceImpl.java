@@ -5,6 +5,9 @@ import com.infodation.userservice.models.dto.user.CreateUserDTO;
 import com.infodation.userservice.models.dto.user.UpdateUserDTO;
 import com.infodation.userservice.repositories.UserRepository;
 import com.infodation.userservice.services.iservice.IUserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,10 +21,9 @@ public class UserServiceImpl implements IUserService {
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
     @Override
-    public List<User> getAll() {
-        return userRepository.findAll();
+    public Page<User> getAll(Pageable pageable) {
+        return userRepository.findAll(pageable);
     }
 
     @Override
