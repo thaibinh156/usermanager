@@ -1,7 +1,10 @@
 package com.infodation.userservice.models;
 
+
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Entity(name = "users")
 public class User implements Serializable {
@@ -23,13 +26,20 @@ public class User implements Serializable {
     @Column(name = "email")
     private String email;
 
-    public User(Long id, String email, Sex sex, String lastName, String userId, String firstName) {
+    @Column(name="created_at")
+    private LocalDateTime createdAt;
+
+    @Column(name="updated_at")
+    private LocalDateTime updatedAt;
+    public User(Long id, String email, Sex sex, String lastName, String userId, String firstName, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.email = email;
         this.sex = sex;
         this.lastName = lastName;
         this.userId = userId;
         this.firstName = firstName;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     public User() {
@@ -45,6 +55,14 @@ public class User implements Serializable {
 
     public String getUserId() {
         return userId;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 
     public void setUserId(String userId) {
@@ -77,6 +95,14 @@ public class User implements Serializable {
 
     public String getEmail() {
         return email;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public void setEmail(String email) {
