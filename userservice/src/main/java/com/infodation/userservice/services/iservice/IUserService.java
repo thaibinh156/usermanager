@@ -9,7 +9,9 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface IUserService {
-    Page<User> getAll(Pageable pageable);
+
+    Page<User> getAll(Pageable pageable, String name);
+
     User getByUserId(String userId);
     User save(CreateUserDTO user);
     User update(String userId,UpdateUserDTO user);
