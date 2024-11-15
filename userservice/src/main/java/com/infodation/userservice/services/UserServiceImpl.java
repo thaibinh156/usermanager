@@ -22,7 +22,6 @@ public class UserServiceImpl implements IUserService {
             name = "";
         }
         if (!name.isEmpty()) {
-            System.out.println("Searching for name: " + name);
             return userRepository.findByName(name, pageable);
         }
         return userRepository.findAll(pageable);
