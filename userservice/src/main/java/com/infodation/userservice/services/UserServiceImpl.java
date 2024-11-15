@@ -7,29 +7,43 @@ import com.infodation.userservice.repositories.UserRepository;
 import com.infodation.userservice.services.iservice.IUserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class UserServiceImpl implements IUserService {
-
     private final UserRepository userRepository;
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Async
+    public CompletableFuture<Void> bulkEditUsers(List<UpdateUserDTO> usersDTO) {
+        for (UpdateUserDTO userDTO : usersDTO) {
+            User userToUpdate = userRepository.findByUserId(userDTO.getUserId()).orElse(null);
+            if (userToUpdate != null) {
+                userToUpdate.setFirstName(userDTO.getFirstName());
+                userToUpdate.setLastName(userDTO.getLastName());
+                userToUpdate.setEmail(userDTO.getEmail());
+                userToUpdate.setSex(userDTO.getSex());
+                userToUpdate.setUpdatedAt(LocalDateTime.now());
+                userRepository.save(userToUpdate);
+            }
+        }
+        return CompletableFuture.completedFuture(null);
+    }
 
     @Override
     public Page<User> getAll(Pageable pageable, String name) {
         String query = Optional.ofNullable(name).orElse("");
         return userRepository.findByName(query, pageable);
     }
-
-
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-
-
 
     @Override
     public User getByUserId(String userId) {

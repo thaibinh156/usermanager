@@ -13,7 +13,9 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class UpdateUserDTO {
     @Valid
-
+    @NotNull(message = "UserId is required")
+    @NotBlank(message = "UserId Name is required")
+    private String userId;
     @NotNull(message = "First name is required")
     @NotBlank(message = "first Name is required")
     private String firstName;

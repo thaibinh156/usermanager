@@ -31,6 +31,19 @@ public class UsersController {
         this.userService = userService;
     }
 
+    @PutMapping("/bulk-edit")
+    public ResponseEntity<ApiResponse<String>> bulkEdit(@RequestBody List<UpdateUserDTO> usersDTO) {
+        userService.bulkEditUsers(usersDTO);
+
+        ApiResponse<String> response = ApiResponseUtil.buildApiResponse(
+                "The update is working on background",
+                HttpStatus.OK,
+                "Bulk update initiated",
+                null
+        );
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @GetMapping
     public ResponseEntity<ApiResponse<Page<User>>> getUsers(
             @RequestParam(defaultValue = "0") int page,
