@@ -16,5 +16,5 @@ public interface IUserService {
     User save(CreateUserDTO user);
     User update(String userId,UpdateUserDTO user);
     void delete(String userId);
-    CompletableFuture<Void> bulkEditUsers(List<UpdateUserDTO> usersDTO);
+    CompletableFuture<Void> bulkEditUsersAsync(List<UpdateUserDTO> usersDTO);
 }

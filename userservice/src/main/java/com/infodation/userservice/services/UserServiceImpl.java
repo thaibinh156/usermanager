@@ -8,10 +8,9 @@ import com.infodation.userservice.services.iservice.IUserService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -24,7 +23,8 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Async
-    public CompletableFuture<Void> bulkEditUsers(List<UpdateUserDTO> usersDTO) {
+    public CompletableFuture<Void> bulkEditUsersAsync(List<UpdateUserDTO> usersDTO) {
+        List<User> usersToUpdate = new ArrayList<>();
         for (UpdateUserDTO userDTO : usersDTO) {
             User userToUpdate = userRepository.findByUserId(userDTO.getUserId()).orElse(null);
             if (userToUpdate != null) {
@@ -33,9 +33,9 @@ public class UserServiceImpl implements IUserService {
                 userToUpdate.setEmail(userDTO.getEmail());
                 userToUpdate.setSex(userDTO.getSex());
                 userToUpdate.setUpdatedAt(LocalDateTime.now());
-                userRepository.save(userToUpdate);
+                usersToUpdate.add(userToUpdate);
             }
-        }
+        } userRepository.saveAll(usersToUpdate);
         return CompletableFuture.completedFuture(null);
     }
 

@@ -33,7 +33,7 @@ public class UsersController {
 
     @PutMapping("/bulk-edit")
     public ResponseEntity<ApiResponse<String>> bulkEdit(@RequestBody List<UpdateUserDTO> usersDTO) {
-        userService.bulkEditUsers(usersDTO);
+        userService.bulkEditUsersAsync(usersDTO);
 
         ApiResponse<String> response = ApiResponseUtil.buildApiResponse(
                 "The update is working on background",
