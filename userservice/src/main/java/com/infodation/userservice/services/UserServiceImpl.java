@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements IUserService {
@@ -18,14 +19,10 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public Page<User> getAll(Pageable pageable, String name) {
-        if (name == null) {
-            name = "";
-        }
-        if (!name.isEmpty()) {
-            return userRepository.findByName(name, pageable);
-        }
-        return userRepository.findAll(pageable);
+        String query = Optional.ofNullable(name).orElse("");
+        return userRepository.findByName(query, pageable);
     }
+
 
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
