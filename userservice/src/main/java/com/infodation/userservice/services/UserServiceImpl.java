@@ -6,25 +6,34 @@ import com.infodation.userservice.models.dto.user.UpdateUserDTO;
 import com.infodation.userservice.repositories.UserRepository;
 import com.infodation.userservice.services.iservice.IUserService;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 public class UserServiceImpl implements IUserService {
 
     private final UserRepository userRepository;
 
+    @Override
+    public Page<User> getAll(Pageable pageable, String name) {
+        if (name == null) {
+            name = "";
+        }
+        if (!name.isEmpty()) {
+            System.out.println("Searching for name: " + name);
+            return userRepository.findByName(name, pageable);
+        }
+        return userRepository.findAll(pageable);
+    }
+
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-    @Override
-    public Page<User> getAll(Pageable pageable) {
-        return userRepository.findAll(pageable);
-    }
+
+
+
 
     @Override
     public User getByUserId(String userId) {

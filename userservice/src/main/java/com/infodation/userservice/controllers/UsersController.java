@@ -24,6 +24,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/users")
 public class UsersController {
+
     private final IUserService userService;
 
     public UsersController(IUserService userService) {
@@ -33,14 +34,16 @@ public class UsersController {
     @GetMapping
     public ResponseEntity<ApiResponse<Page<User>>> getUsers(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "2") int size)
-    {
+            @RequestParam(defaultValue = "2") int size,
+            @RequestParam(required = false) String name
+    ) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<User> users = userService.getAll(pageable);
+        Page<User> users = userService.getAll(pageable, name);
 
         ApiResponse<Page<User>> apiResponse = ApiResponseUtil.buildApiResponse(users, HttpStatus.OK, "Users fetched successfully", null);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
+
 
     @GetMapping("/{userId}")
     public ResponseEntity<ApiResponse<User>> getUserById(@PathVariable("userId") String userId) {
