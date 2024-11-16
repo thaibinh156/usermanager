@@ -5,6 +5,9 @@ import com.infodation.userservice.models.dto.user.CreateUserDTO;
 import com.infodation.userservice.models.dto.user.UpdateUserDTO;
 import com.infodation.userservice.services.iservice.IUserService;
 import com.infodation.userservice.utils.ApiResponse;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -21,18 +24,39 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/users")
 public class UsersController {
+
     private final IUserService userService;
 
     public UsersController(IUserService userService) {
         this.userService = userService;
     }
 
+    @PutMapping("/bulk-edit")
+    public ResponseEntity<ApiResponse<String>> bulkEdit(@RequestBody List<UpdateUserDTO> usersDTO) {
+        userService.bulkEditUsersAsync(usersDTO);
+
+        ApiResponse<String> response = ApiResponseUtil.buildApiResponse(
+                "The update is working on background",
+                HttpStatus.OK,
+                "Bulk update initiated",
+                null
+        );
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
     @GetMapping
-    public ResponseEntity<ApiResponse<List<User>>> getUsers() {
-        List<User> users = userService.getAll();
-        ApiResponse<List<User>> apiResponse = ApiResponseUtil.buildApiResponse(users, HttpStatus.OK, "Users fetched successfully", null);
+    public ResponseEntity<ApiResponse<Page<User>>> getUsers(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "2") int size,
+            @RequestParam(required = false) String name
+    ) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<User> users = userService.getAll(pageable, name);
+
+        ApiResponse<Page<User>> apiResponse = ApiResponseUtil.buildApiResponse(users, HttpStatus.OK, "Users fetched successfully", null);
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
+
 
     @GetMapping("/{userId}")
     public ResponseEntity<ApiResponse<User>> getUserById(@PathVariable("userId") String userId) {
@@ -98,7 +122,7 @@ public class UsersController {
         } else {
             userService.delete(userId);
             status = HttpStatus.OK;
-            message =  String.format("User with ID %s not found", userId);
+            message = String.format("User with ID %s deleted successfully", userId);
         }
 
         ApiResponse<?> response = ApiResponseUtil.buildApiResponse(null, status, message, null);

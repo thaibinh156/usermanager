@@ -5,22 +5,44 @@ import com.infodation.userservice.models.dto.user.CreateUserDTO;
 import com.infodation.userservice.models.dto.user.UpdateUserDTO;
 import com.infodation.userservice.repositories.UserRepository;
 import com.infodation.userservice.services.iservice.IUserService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class UserServiceImpl implements IUserService {
-
     private final UserRepository userRepository;
-
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
+    @Async
+    public CompletableFuture<Void> bulkEditUsersAsync(List<UpdateUserDTO> usersDTO) {
+        List<User> usersToUpdate = new ArrayList<>();
+        for (UpdateUserDTO userDTO : usersDTO) {
+            User userToUpdate = userRepository.findByUserId(userDTO.getUserId()).orElse(null);
+            if (userToUpdate != null) {
+                userToUpdate.setFirstName(userDTO.getFirstName());
+                userToUpdate.setLastName(userDTO.getLastName());
+                userToUpdate.setEmail(userDTO.getEmail());
+                userToUpdate.setSex(userDTO.getSex());
+                userToUpdate.setUpdatedAt(LocalDateTime.now());
+                usersToUpdate.add(userToUpdate);
+            }
+        } userRepository.saveAll(usersToUpdate);
+        return CompletableFuture.completedFuture(null);
+    }
+
     @Override
-    public List<User> getAll() {
-        return userRepository.findAll();
+    public Page<User> getAll(Pageable pageable, String name) {
+        String query = Optional.ofNullable(name).orElse("");
+        return userRepository.findByName(query, pageable);
     }
 
     @Override
@@ -30,13 +52,15 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public User save(CreateUserDTO user) {
-
         User newUser = new User();
         newUser.setUserId(user.getUserId());
         newUser.setFirstName(user.getFirstName());
         newUser.setLastName(user.getLastName());
         newUser.setEmail(user.getEmail());
         newUser.setSex(user.getSex());
+        newUser.setCreatedAt(LocalDateTime.now());
+        newUser.setUpdatedAt(LocalDateTime.now());
+
         return userRepository.save(newUser);
     }
 
@@ -52,7 +76,7 @@ public class UserServiceImpl implements IUserService {
         userToUpdate.setLastName(user.getLastName());
         userToUpdate.setEmail(user.getEmail());
         userToUpdate.setSex(user.getSex());
-
+        userToUpdate.setUpdatedAt(LocalDateTime.now());
         return userRepository.save(userToUpdate);
     }
 
