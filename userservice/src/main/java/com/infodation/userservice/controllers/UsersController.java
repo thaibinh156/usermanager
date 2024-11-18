@@ -57,7 +57,6 @@ public class UsersController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-
     @GetMapping("/{userId}")
     public ResponseEntity<ApiResponse<User>> getUserById(@PathVariable("userId") String userId) {
         User user = userService.getByUserId(userId);
