@@ -19,5 +19,5 @@ public interface IUserService {
     User update(String userId,UpdateUserDTO user);
     void delete(String userId);
     CompletableFuture<Void> bulkEditUsersAsync(List<UpdateUserDTO> usersDTO);
-    CompletableFuture<Void> importUsersFromCsv(MultipartFile file) throws IOException;
+    CompletableFuture<Void> importUsersFromCsvAsync(MultipartFile file) throws IOException;
 }

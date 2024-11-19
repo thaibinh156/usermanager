@@ -42,7 +42,7 @@ public class UsersController {
     @PostMapping("/csv-migrate")
     public ResponseEntity<String> importUsers(@RequestPart("file") MultipartFile file) {
         try {
-            userService.importUsersFromCsv(file);
+            userService.importUsersFromCsvAsync(file);
             return ResponseEntity.ok("CSV file is being processed in the background");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred during CSV import");

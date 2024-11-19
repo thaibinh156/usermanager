@@ -13,14 +13,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -29,52 +26,65 @@ public class UserServiceImpl implements IUserService {
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-    @Async  // Annotation cho bất đồng bộ
-    public CompletableFuture<Void> importUsersFromCsv(MultipartFile file) throws IOException {
+    @Async  // Annotation for asynchronous execution
+    public CompletableFuture<Void> importUsersFromCsvAsync(MultipartFile file) throws IOException {
         List<User> usersToSave = new ArrayList<>();
+        // Retrieve all existing userIds from the database (for comparison)
+        List<String> allUserIdsInDb = userRepository.findAllUserIds();
+        Set<String> userIdsInDbSet = new HashSet<>(allUserIdsInDb);
 
-        // Đọc file CSV
-        try (CSVReader reader = new CSVReader(new InputStreamReader(file.getInputStream()))) {
+        // Read the CSV file
+        try (CSVReader reader = new CSVReader(new BufferedReader(new InputStreamReader(file.getInputStream())))) {
             String[] nextLine;
             boolean isHeader = true;
 
             while ((nextLine = reader.readNext()) != null) {
-                if (isHeader) {  // Skip dòng tiêu đề
+                if (isHeader) {  // Skip the header row
                     isHeader = false;
                     continue;
                 }
+
                 try {
-                    // Tạo đối tượng User, chỉ lấy các cột cần thiết
+                    String userId = nextLine[1];  // column 1 is userId
+
+                    // Check if userId already exists in the database
+                    if (userIdsInDbSet.contains(userId)) {
+                        System.out.println("User with ID " + userId + " already exists, skipping.");
+                        continue; // Skip if userId already exists in the database
+                    }
+                    // Map the CSV data to a User object
                     User user = new User();
-                    user.setUserId(nextLine[1]); // Giả định cột 1 là userId
-                    user.setFirstName(nextLine[2]); // Giả định cột 2 là firstName
-                    user.setLastName(nextLine[3]); // Giả định cột 3 là lastName
-                    user.setEmail(nextLine[5]); // Giả định cột 5 là email
-                    user.setSex(Sex.valueOf(nextLine[4].toUpperCase())); // MALE/FEMALE
+                    user.setUserId(userId); // Column 1 is userId
+                    user.setFirstName(nextLine[2]); // Column 2 is firstName
+                    user.setLastName(nextLine[3]); // Column 3 is lastName
+                    user.setEmail(nextLine[5]); // Column 5 is email
+                    user.setSex(Sex.valueOf(nextLine[4].toUpperCase())); // Column 4 is MALE/FEMALE
                     user.setCreatedAt(LocalDateTime.now());
                     user.setUpdatedAt(LocalDateTime.now());
+                    // Add user to the list if it doesn't exist in the database
                     usersToSave.add(user);
-                    // Khi danh sách đủ 10.000 người dùng thì lưu
+                    // Save when the list reaches 5,000 users
                     if (usersToSave.size() == 5000) {
+                        System.out.println("Saving " + usersToSave.size() + " users.");
                         userRepository.saveAll(usersToSave);
-                        usersToSave.clear(); // Xóa danh sách sau khi lưu
+                        usersToSave.clear(); // Clear the list after saving
                     }
                 } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException e) {
-                    // Bỏ qua dòng có lỗi hoặc không đầy đủ
-                    System.out.println("Invalid data in CSV line, skipping this row.");
+                    System.out.println("Invalid data in CSV line, skipping this row. Error: " + e.getMessage());
+                } catch (Exception ex) {
+                    System.out.println("Invalid data in CSV line, skipping this row. Error: " + ex.getMessage());
                 }
             }
         } catch (CsvValidationException e) {
             throw new IOException("Error reading CSV file", e);
         }
-
-        // Lưu các bản ghi còn lại
+        // Save remaining records after reading all lines
         if (!usersToSave.isEmpty()) {
+            System.out.println("Saving " + usersToSave.size() + " users.");
             userRepository.saveAll(usersToSave);
         }
         return CompletableFuture.completedFuture(null);
     }
-
     @Async
     public CompletableFuture<Void> bulkEditUsersAsync(List<UpdateUserDTO> usersDTO) {
         List<User> usersToUpdate = new ArrayList<>();
