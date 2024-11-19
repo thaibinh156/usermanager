@@ -5,17 +5,26 @@ import com.infodation.userservice.models.dto.user.CreateUserDTO;
 import com.infodation.userservice.models.dto.user.UpdateUserDTO;
 import com.infodation.userservice.services.iservice.IUserService;
 import com.infodation.userservice.utils.ApiResponse;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Schema;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import io.swagger.v3.oas.annotations.media.Content;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import com.infodation.userservice.utils.ApiResponseUtil;
+import org.springframework.web.multipart.MultipartFile;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 
 import javax.validation.Valid;
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
@@ -29,6 +38,15 @@ public class UsersController {
 
     public UsersController(IUserService userService) {
         this.userService = userService;
+    }
+    @PostMapping("/csv-migrate")
+    public ResponseEntity<String> importUsers(@RequestPart("file") MultipartFile file) {
+        try {
+            userService.importUsersFromCsvAsync(file);
+            return ResponseEntity.ok("CSV file is being processed in the background");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred during CSV import");
+        }
     }
 
     @PutMapping("/bulk-edit")
