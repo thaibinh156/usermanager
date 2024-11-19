@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -18,7 +19,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Page<User> findByName(@Param("name") String name, Pageable pageable);
 
     @Query("SELECT u.userId FROM users u")
-    List<String> findAllUserIds();
+    Set<String> findAllUserIds();
 
     Optional<User> findByUserId(String userId);
     @Transactional

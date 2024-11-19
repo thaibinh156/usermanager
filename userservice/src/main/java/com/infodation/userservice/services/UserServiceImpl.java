@@ -19,19 +19,20 @@ import java.io.InputStreamReader;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-
+import org.springframework.beans.factory.annotation.Value;
 @Service
 public class UserServiceImpl implements IUserService {
     private final UserRepository userRepository;
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
+    @Value("${user.batch.size}") //value is injected from the application.properties file
+    private int batchSize;
     @Async  // Annotation for asynchronous execution
     public CompletableFuture<Void> importUsersFromCsvAsync(MultipartFile file) throws IOException {
         List<User> usersToSave = new ArrayList<>();
         // Retrieve all existing userIds from the database (for comparison)
-        List<String> allUserIdsInDb = userRepository.findAllUserIds();
-        Set<String> userIdsInDbSet = new HashSet<>(allUserIdsInDb);
+        Set<String> userIdsInDbSet = userRepository.findAllUserIds();
 
         // Read the CSV file
         try (CSVReader reader = new CSVReader(new BufferedReader(new InputStreamReader(file.getInputStream())))) {
@@ -43,7 +44,6 @@ public class UserServiceImpl implements IUserService {
                     isHeader = false;
                     continue;
                 }
-
                 try {
                     String userId = nextLine[1];  // column 1 is userId
 
@@ -63,8 +63,8 @@ public class UserServiceImpl implements IUserService {
                     user.setUpdatedAt(LocalDateTime.now());
                     // Add user to the list if it doesn't exist in the database
                     usersToSave.add(user);
-                    // Save when the list reaches 5,000 users
-                    if (usersToSave.size() == 5000) {
+                    // Save users when the list size reaches the batch size defined in application.properties
+                    if (usersToSave.size() == batchSize) {
                         System.out.println("Saving " + usersToSave.size() + " users.");
                         userRepository.saveAll(usersToSave);
                         usersToSave.clear(); // Clear the list after saving
