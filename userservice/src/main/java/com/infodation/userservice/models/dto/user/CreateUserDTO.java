@@ -4,9 +4,9 @@ import com.infodation.userservice.models.Sex;
 import lombok.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 
 @Data
 @NoArgsConstructor
@@ -18,17 +18,17 @@ public class CreateUserDTO {
     @NotBlank(message = "User ID is required")
     private String userId;
 
-    @NotNull(message = "First name is required")
-    @NotBlank(message = "first Name is required")
+    @NotNull(message = "First Name is required")
+    @NotBlank(message = "First Name is required")
     private String firstName;
 
-    @NotNull(message = "Last name is required")
+    @NotNull(message = "Last Name is required")
     @NotBlank(message = "Last Name is required")
     private String lastName;
 
     @NotNull(message = "Email is required")
     @NotBlank(message = "Email is required")
-    @Email(message = "Email is invalid")
+    @Pattern(regexp = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$", message = "Invalid email format")
     private String email;
 
     @NotNull(message = "Sex is required")

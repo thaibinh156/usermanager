@@ -8,6 +8,8 @@ import com.infodation.userservice.repositories.UserRepository;
 import com.infodation.userservice.services.iservice.IUserService;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
@@ -16,10 +18,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.beans.factory.annotation.Value;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import org.springframework.beans.factory.annotation.Value;
 @Service
 public class UserServiceImpl implements IUserService {
     private final UserRepository userRepository;
@@ -109,12 +112,14 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    @Cacheable(value = "users", key = "#userId")
     public User getByUserId(String userId) {
         return userRepository.findByUserId(userId).orElse(null);
     }
 
     @Override
     public User save(CreateUserDTO user) {
+
         User newUser = new User();
         newUser.setUserId(user.getUserId());
         newUser.setFirstName(user.getFirstName());
@@ -128,8 +133,9 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public User update(String useId, UpdateUserDTO user) {
-        User userToUpdate = userRepository.findByUserId(useId).orElse(null);
+    @CachePut(value = "users", key = "#userId")
+    public User update(String userId, UpdateUserDTO user) {
+        User userToUpdate = userRepository.findByUserId(userId).orElse(null);
 
         if (userToUpdate == null) {
             return null;
@@ -144,6 +150,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
+    @CacheEvict(value = "users", key = "#userId")
     public void delete(String userId) {
         userRepository.deleteByUserId(userId);
     }
