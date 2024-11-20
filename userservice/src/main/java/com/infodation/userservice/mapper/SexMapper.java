@@ -9,6 +9,6 @@ public interface SexMapper {
 
     @Named("sexToEnum")
     default Sex mapSexToEnum(String sex) {
-        return Sex.valueOf(sex.toUpperCase());
+        return Sex.valueOf(sex.toUpperCase()); // Convert String to Enum by converting the input to uppercase
     }
 }

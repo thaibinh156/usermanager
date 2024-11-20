@@ -12,17 +12,21 @@ import org.mapstruct.factory.Mappers;
 @Mapper(uses = SexMapper.class)
 public interface UserMapper {
 
-    // Tạo instance của UserMapper
+    // Create an instance of the UserMapper interface using MapStruct
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
+    // Map the fields from UserDTO to User
 
     @Mapping(source = "sex", target = "sex", qualifiedByName = "sexToEnum")
     @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())")
     User userDTOToUser(UserDTO userDTO);
+    // Map the fields from CreateUserDTO to User
     @Mapping(target = "createdAt", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(source = "sex", target = "sex", qualifiedByName = "sexToEnum")
     User createUserDTOToUser(CreateUserDTO createUserDTO);
+
+    // Map the fields from UpdateUserDTO to User and update an existing User entity
     @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(source = "sex", target = "sex", qualifiedByName = "sexToEnum")
     void updateUserDTOToUser(UpdateUserDTO updateUserDTO, @MappingTarget User userToUpdate);

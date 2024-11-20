@@ -123,7 +123,7 @@ public class UserServiceImpl implements IUserService {
             return null;
         }
 
-        // Chỉ cập nhật các trường cần thiết, giữ lại `userId` và các trường khác của thực thể cũ
+        // Only update the necessary fields, keeping the userId and other fields from the existing entity
         UserMapper.INSTANCE.updateUserDTOToUser(user, userToUpdate);
 
         return userRepository.save(userToUpdate);
