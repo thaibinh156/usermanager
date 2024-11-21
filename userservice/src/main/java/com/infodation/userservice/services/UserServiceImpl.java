@@ -8,9 +8,11 @@ import com.infodation.userservice.models.dto.user.UpdateUserDTO;
 import com.infodation.userservice.repositories.UserRepository;
 import com.infodation.userservice.services.iservice.IUserService;
 import com.opencsv.CSVReader;
+import java.util.ArrayList;
 import com.opencsv.exceptions.CsvValidationException;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
@@ -19,13 +21,16 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.beans.factory.annotation.Value;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import org.springframework.beans.factory.annotation.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import java.util.List;
+import java.util.Optional;
 @Service
 public class UserServiceImpl implements IUserService {
+    private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserRepository userRepository;
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
@@ -34,6 +39,7 @@ public class UserServiceImpl implements IUserService {
     private int batchSize;
     @Async  // Annotation for asynchronous execution
     public CompletableFuture<Void> importUsersFromCsvAsync(MultipartFile file) throws IOException {
+        logger.info("Starting CSV import process");
         List<User> usersToSave = new ArrayList<>();
         // Retrieve all existing userIds from the database (for comparison)
         Set<String> userIdsInDbSet = userRepository.findAllUserIds();
@@ -53,7 +59,7 @@ public class UserServiceImpl implements IUserService {
 
                     // Check if userId already exists in the database
                     if (userIdsInDbSet.contains(userId)) {
-                        System.out.println("User with ID " + userId + " already exists, skipping.");
+                        logger.info("User with ID {} already exists, skipping.", userId);
                         continue; // Skip if userId already exists in the database
                     }
                     UserDTO userDTO = new UserDTO(
@@ -69,28 +75,30 @@ public class UserServiceImpl implements IUserService {
 
                     // Save users when the list size reaches the batch size defined in application.properties
                     if (usersToSave.size() == batchSize) {
-                        System.out.println("Saving " + usersToSave.size() + " users.");
+                        logger.info("Saving {} users", usersToSave.size());
                         userRepository.saveAll(usersToSave);
                         usersToSave.clear(); // Clear the list after saving
                     }
-                } catch (ArrayIndexOutOfBoundsException | IllegalArgumentException e) {
-                    System.out.println("Invalid data in CSV line, skipping this row. Error: " + e.getMessage());
-                } catch (Exception ex) {
-                    System.out.println("Invalid data in CSV line, skipping this row. Error: " + ex.getMessage());
+                } catch (Exception e) {
+                    logger.error("Error processing line, skipping. Error: {}", e.getMessage());
                 }
             }
         } catch (CsvValidationException e) {
+            logger.error("Error reading CSV file", e);
             throw new IOException("Error reading CSV file", e);
         }
-        // Save remaining records after reading all lines
+
         if (!usersToSave.isEmpty()) {
-            System.out.println("Saving " + usersToSave.size() + " users.");
+            logger.info("Saving {} users", usersToSave.size());
             userRepository.saveAll(usersToSave);
         }
+
+        logger.info("CSV import process completed.");
         return CompletableFuture.completedFuture(null);
     }
     @Async
     public CompletableFuture<Void> bulkEditUsersAsync(List<UpdateUserDTO> usersDTO) {
+        logger.info("Bulk edit started for {} users", usersDTO.size());
         List<User> usersToUpdate = new ArrayList<>();
         for (UpdateUserDTO userDTO : usersDTO) {
             User userToUpdate = userRepository.findByUserId(userDTO.getUserId()).orElse(null);
@@ -99,6 +107,7 @@ public class UserServiceImpl implements IUserService {
                 usersToUpdate.add(userToUpdate);
             }
         } userRepository.saveAll(usersToUpdate);
+        logger.info("Bulk edit completed, updated {} users", usersToUpdate.size());
         return CompletableFuture.completedFuture(null);
     }
 
@@ -127,7 +136,6 @@ public class UserServiceImpl implements IUserService {
         if (userToUpdate == null) {
             return null;
         }
-
         // Only update the necessary fields, keeping the userId and other fields from the existing entity
         UserMapper.INSTANCE.updateUserDTOToUser(user, userToUpdate);
 
