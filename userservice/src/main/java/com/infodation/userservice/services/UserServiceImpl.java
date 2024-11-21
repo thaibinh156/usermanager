@@ -110,7 +110,6 @@ public class UserServiceImpl implements IUserService {
         logger.info("Bulk edit completed, updated {} users", usersToUpdate.size());
         return CompletableFuture.completedFuture(null);
     }
-
     @Override
     public Page<User> getAll(Pageable pageable, String name) {
         String query = Optional.ofNullable(name).orElse("");
