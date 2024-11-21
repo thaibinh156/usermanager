@@ -5,16 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1d671b26-33f4-47fa-a7e0-bdd11454aee0" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userservice/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/userservice/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/config/SpringFoxConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/config/SpringFoxConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/controllers/UsersController.java" beforeDir="false" afterPath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/controllers/UsersController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/repositories/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/repositories/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/services/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/services/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/services/iservice/IUserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/services/iservice/IUserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userservice/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/userservice/src/main/resources/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -41,6 +33,9 @@
       </MavenGeneralSettings>
     </option>
   </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectId" id="2p11yqb4fcfO8r3I8HnbdeXDU3Z" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -49,7 +44,11 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true"
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0",
+    "settings.editor.selected.configurable": "preferences.lookFeel"
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
