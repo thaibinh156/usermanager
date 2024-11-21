@@ -59,7 +59,7 @@ public class UserServiceImpl implements IUserService {
 
                     // Check if userId already exists in the database
                     if (userIdsInDbSet.contains(userId)) {
-                        logger.info("User with ID {} already exists, skipping.", userId);
+                        logger.debug("User with ID {} already exists, skipping.", userId);
                         continue; // Skip if userId already exists in the database
                     }
                     UserDTO userDTO = new UserDTO(
