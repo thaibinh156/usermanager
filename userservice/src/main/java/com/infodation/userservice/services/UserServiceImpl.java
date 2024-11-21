@@ -1,7 +1,8 @@
 package com.infodation.userservice.services;
 
-import com.infodation.userservice.models.Sex;
+import com.infodation.userservice.mapper.UserMapper;
 import com.infodation.userservice.models.User;
+import com.infodation.userservice.models.UserDTO;
 import com.infodation.userservice.models.dto.user.CreateUserDTO;
 import com.infodation.userservice.models.dto.user.UpdateUserDTO;
 import com.infodation.userservice.repositories.UserRepository;
@@ -55,17 +56,17 @@ public class UserServiceImpl implements IUserService {
                         System.out.println("User with ID " + userId + " already exists, skipping.");
                         continue; // Skip if userId already exists in the database
                     }
-                    // Map the CSV data to a User object
-                    User user = new User();
-                    user.setUserId(userId); // Column 1 is userId
-                    user.setFirstName(nextLine[2]); // Column 2 is firstName
-                    user.setLastName(nextLine[3]); // Column 3 is lastName
-                    user.setEmail(nextLine[5]); // Column 5 is email
-                    user.setSex(Sex.valueOf(nextLine[4].toUpperCase())); // Column 4 is MALE/FEMALE
-                    user.setCreatedAt(LocalDateTime.now());
-                    user.setUpdatedAt(LocalDateTime.now());
-                    // Add user to the list if it doesn't exist in the database
+                    UserDTO userDTO = new UserDTO(
+                            userId,
+                            nextLine[2], // firstName
+                            nextLine[3], // lastName
+                            nextLine[4], // sex
+                            nextLine[5]  // email
+                    );
+
+                    User user = UserMapper.INSTANCE.userDTOToUser(userDTO);
                     usersToSave.add(user);
+
                     // Save users when the list size reaches the batch size defined in application.properties
                     if (usersToSave.size() == batchSize) {
                         System.out.println("Saving " + usersToSave.size() + " users.");
@@ -94,11 +95,7 @@ public class UserServiceImpl implements IUserService {
         for (UpdateUserDTO userDTO : usersDTO) {
             User userToUpdate = userRepository.findByUserId(userDTO.getUserId()).orElse(null);
             if (userToUpdate != null) {
-                userToUpdate.setFirstName(userDTO.getFirstName());
-                userToUpdate.setLastName(userDTO.getLastName());
-                userToUpdate.setEmail(userDTO.getEmail());
-                userToUpdate.setSex(userDTO.getSex());
-                userToUpdate.setUpdatedAt(LocalDateTime.now());
+                UserMapper.INSTANCE.updateUserDTOToUser(userDTO, userToUpdate);
                 usersToUpdate.add(userToUpdate);
             }
         } userRepository.saveAll(usersToUpdate);
@@ -118,17 +115,8 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public User save(CreateUserDTO user) {
-
-        User newUser = new User();
-        newUser.setUserId(user.getUserId());
-        newUser.setFirstName(user.getFirstName());
-        newUser.setLastName(user.getLastName());
-        newUser.setEmail(user.getEmail());
-        newUser.setSex(user.getSex());
-        newUser.setCreatedAt(LocalDateTime.now());
-        newUser.setUpdatedAt(LocalDateTime.now());
-
+    public User save(CreateUserDTO userDTO) {
+        User newUser = UserMapper.INSTANCE.createUserDTOToUser(userDTO);
         return userRepository.save(newUser);
     }
 
@@ -136,18 +124,16 @@ public class UserServiceImpl implements IUserService {
     @CachePut(value = "users", key = "#userId")
     public User update(String userId, UpdateUserDTO user) {
         User userToUpdate = userRepository.findByUserId(userId).orElse(null);
-
         if (userToUpdate == null) {
             return null;
         }
 
-        userToUpdate.setFirstName(user.getFirstName());
-        userToUpdate.setLastName(user.getLastName());
-        userToUpdate.setEmail(user.getEmail());
-        userToUpdate.setSex(user.getSex());
-        userToUpdate.setUpdatedAt(LocalDateTime.now());
+        // Only update the necessary fields, keeping the userId and other fields from the existing entity
+        UserMapper.INSTANCE.updateUserDTOToUser(user, userToUpdate);
+
         return userRepository.save(userToUpdate);
     }
+
 
     @Override
     @CacheEvict(value = "users", key = "#userId")
