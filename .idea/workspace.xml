@@ -5,8 +5,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1d671b26-33f4-47fa-a7e0-bdd11454aee0" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/application.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/application.log" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/models/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/models/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/models/notimodel/Notifications.java" beforeDir="false" afterPath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/models/notimodel/Notifications.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/repositories/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/repositories/UserRepository.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,8 +20,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -46,10 +50,11 @@
   "keyToString": {
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "project.structure.last.edited": "Project",
-    "project.structure.proportion": "0.0",
-    "project.structure.side.proportion": "0.0",
-    "settings.editor.selected.configurable": "preferences.lookFeel"
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "project.structure.last.edited": "SDKs",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "preferences.pluginManager"
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />

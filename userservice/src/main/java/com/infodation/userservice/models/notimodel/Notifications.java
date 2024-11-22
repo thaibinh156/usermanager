@@ -1,5 +1,7 @@
 package com.infodation.userservice.models.notimodel;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.infodation.userservice.models.User;
 
 import javax.persistence.*;
@@ -13,7 +15,8 @@ public class Notifications {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false , referencedColumnName = "user_id")
+    @JsonBackReference
     private User user;
     @Column(name = "message", nullable = false)
     private String message;

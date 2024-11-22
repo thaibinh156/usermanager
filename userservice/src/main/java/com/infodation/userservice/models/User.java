@@ -2,9 +2,13 @@ package com.infodation.userservice.models;
 
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.infodation.userservice.models.notimodel.Notifications;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -18,6 +22,18 @@ public class User implements Serializable {
     private Long id;
     @Column(name = "user_id")
     private String userId;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private Set<Notifications> notifications;
+
+    public Set<Notifications> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(Set<Notifications> notifications) {
+        this.notifications = notifications;
+    }
+
     @Column(name = "first_name")
     private String firstName;
     @Column(name = "last_name")
