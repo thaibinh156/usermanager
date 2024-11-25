@@ -1,5 +1,6 @@
 package com.infodation.userservice.controllers;
 
+import com.infodation.userservice.models.TaskDTO.TaskUserResponseDTO;
 import com.infodation.userservice.models.User;
 import com.infodation.userservice.models.dto.user.CreateUserDTO;
 import com.infodation.userservice.models.dto.user.UpdateUserDTO;
@@ -14,6 +15,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import com.infodation.userservice.utils.ApiResponseUtil;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import javax.validation.Valid;
@@ -32,8 +34,22 @@ public class UsersController {
 
     private final IUserService userService;
 
-    public UsersController(IUserService userService) {
+    public UsersController(IUserService userService, RestTemplate restTemplate) {
         this.userService = userService;
+        this.restTemplate = restTemplate;
+    }
+    private final RestTemplate restTemplate;
+    // API nhận vào user_id và gọi API của task-service để lấy các task của người dùng
+    @GetMapping("/{userId}/tasks")
+    public ResponseEntity<TaskUserResponseDTO> getUserWithTasks(@PathVariable String userId) {
+        // Gọi phương thức service để lấy thông tin User và tasks
+        try {
+            TaskUserResponseDTO response = userService.getUserWithTasks(userId);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            // Nếu người dùng không tìm thấy
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     @PostMapping("/csv-migrate")

@@ -1,6 +1,8 @@
 package com.infodation.userservice.services;
 
 import com.infodation.userservice.mapper.UserMapper;
+import com.infodation.userservice.models.TaskDTO.TaskDTO;
+import com.infodation.userservice.models.TaskDTO.TaskUserResponseDTO;
 import com.infodation.userservice.models.User;
 import com.infodation.userservice.models.UserDTO;
 import com.infodation.userservice.models.dto.user.CreateUserDTO;
@@ -13,10 +15,14 @@ import com.opencsv.exceptions.CsvValidationException;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,9 +38,52 @@ import java.util.Optional;
 public class UserServiceImpl implements IUserService {
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserRepository userRepository;
-    public UserServiceImpl(UserRepository userRepository) {
+    private final RestTemplate restTemplate;
+
+    public UserServiceImpl(UserRepository userRepository, RestTemplate restTemplate) {
         this.userRepository = userRepository;
+        this.restTemplate = restTemplate;
     }
+
+    @Override
+    public TaskUserResponseDTO getUserWithTasks(String userId) {
+        // Tìm người dùng trong cơ sở dữ liệu dựa trên user_id
+        User user = userRepository.findByUserId(userId).orElse(null);
+
+        // Kiểm tra nếu người dùng không tồn tại
+        if (user == null) {
+            throw new RuntimeException("User not found for user_id: " + userId);
+        }
+
+        // Sử dụng UserMapper để chuyển đổi từ User sang UserDTO
+        UserDTO userDTO = UserMapper.INSTANCE.userToUserDTO(user);
+
+        // Lấy user_id thực tế từ DB (cột id) để gọi API task-service
+        Long userDbId = user.getId(); // Lấy id thực tế từ bảng user
+
+        // Gọi API từ task-service để lấy danh sách task của user
+        String taskServiceUrl = "http://localhost:8081/api/tasks/" + userDbId;
+
+        // Gọi API từ task-service
+        ResponseEntity<List<TaskDTO>> taskResponse = restTemplate.exchange(
+                taskServiceUrl,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<TaskDTO>>() {}
+        );
+
+        List<TaskDTO> tasks = taskResponse.getBody();
+
+        // Tạo TaskUserResponseDTO và trả về
+        TaskUserResponseDTO taskUserResponse = new TaskUserResponseDTO();
+        taskUserResponse.setUser(userDTO);
+        taskUserResponse.setTasks(tasks); // Set danh sách tasks từ taskResponse
+
+        return taskUserResponse;
+    }
+
+
+
     @Value("${user.batch.size}") //value is injected from the application.properties file
     private int batchSize;
     @Async  // Annotation for asynchronous execution

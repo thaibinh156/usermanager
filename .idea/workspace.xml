@@ -5,12 +5,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1d671b26-33f4-47fa-a7e0-bdd11454aee0" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/application.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/application.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/models/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/models/User.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/models/notimodel/Notifications.java" beforeDir="false" afterPath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/models/notimodel/Notifications.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/repositories/UserRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/repositories/UserRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/create-tables-task-service.sql" beforeDir="false" afterPath="$PROJECT_DIR$/scripts/create-tables-task-service.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/task-service/src/main/resources/application.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/task-service/src/test/java/com/infodation/task_service/TaskServiceApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/task-service/src/test/java/com/infodation/task_service/TaskServiceImplApplicationTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/userservice/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/userservice/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/controllers/UsersController.java" beforeDir="false" afterPath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/controllers/UsersController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/mapper/SexMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/mapper/SexMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/mapper/UserMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/mapper/UserMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/services/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/services/UserServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/services/iservice/IUserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/services/iservice/IUserService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,21 +47,24 @@
     <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectId" id="2p11yqb4fcfO8r3I8HnbdeXDU3Z" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "project.structure.last.edited": "SDKs",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "preferences.pluginManager"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -67,5 +75,16 @@
       <updated>1731919028517</updated>
     </task>
     <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>

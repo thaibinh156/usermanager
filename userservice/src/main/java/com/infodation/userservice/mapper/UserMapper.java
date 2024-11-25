@@ -30,5 +30,8 @@ public interface UserMapper {
     @Mapping(target = "updatedAt", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(source = "sex", target = "sex", qualifiedByName = "sexToEnum")
     void updateUserDTOToUser(UpdateUserDTO updateUserDTO, @MappingTarget User userToUpdate);
+
+    @Mapping(source = "sex", target = "sex", qualifiedByName = "sexToString")
+    UserDTO userToUserDTO(User user);
 }
 
