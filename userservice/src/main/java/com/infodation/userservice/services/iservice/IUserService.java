@@ -14,7 +14,6 @@ import java.util.concurrent.CompletableFuture;
 
 public interface IUserService {
     TaskUserResponseDTO getUserWithTasks(String userId);
-
     Page<User> getAll(Pageable pageable, String name);
     User getByUserId(String userId);
     User save(CreateUserDTO user);

@@ -1,6 +1,5 @@
 package com.infodation.task_service.controllers;
 
-import com.infodation.task_service.models.DTO.TaskDTO;
 import com.infodation.task_service.models.TaskProjection;
 import com.infodation.task_service.services.ITaskService;
 import org.springframework.http.HttpStatus;
@@ -24,19 +23,19 @@ public class TaskController {
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<TaskProjection>> getTasksByUserId(@PathVariable Long userId) {
         try {
-            // Lấy danh sách task từ TaskService
+            // Retrieve the list of tasks from TaskService
             List<TaskProjection> tasks = iTaskService.getTasksByUserId(userId);
 
-            // Nếu không có task
+            // If no tasks are found
             if (tasks.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
 
-            // Trả về danh sách task
+            // Return the list of tasks
             return ResponseEntity.ok(tasks);
 
         } catch (Exception e) {
-            // Nếu có lỗi xảy ra
+            // If an error occurs
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }

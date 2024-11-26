@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 @Repository
-public interface UserTaskAssignmentRepository extends JpaRepository<UserTaskAssignment, Long> {
+public interface TaskServiceRepository extends JpaRepository<UserTaskAssignment, Long> {
 
     @Query("SELECT t.id AS taskId, t.title AS title, c.name AS categoryName, c.description AS categoryDescription, s.name AS statusName, s.description AS statusDescription " +
             "FROM Task t " +

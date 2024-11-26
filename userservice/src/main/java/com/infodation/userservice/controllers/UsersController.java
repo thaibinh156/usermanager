@@ -39,15 +39,15 @@ public class UsersController {
         this.restTemplate = restTemplate;
     }
     private final RestTemplate restTemplate;
-    // API nhận vào user_id và gọi API của task-service để lấy các task của người dùng
+    // API receives user_id and calls the task-service API to fetch the user's tasks
     @GetMapping("/{userId}/tasks")
     public ResponseEntity<TaskUserResponseDTO> getUserWithTasks(@PathVariable String userId) {
-        // Gọi phương thức service để lấy thông tin User và tasks
+        // Call the service method to get User and tasks information
         try {
             TaskUserResponseDTO response = userService.getUserWithTasks(userId);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
-            // Nếu người dùng không tìm thấy
+            // If the user is not found
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }

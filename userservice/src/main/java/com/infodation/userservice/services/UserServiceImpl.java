@@ -47,26 +47,19 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public TaskUserResponseDTO getUserWithTasks(String userId) {
-        // Tìm người dùng trong cơ sở dữ liệu dựa trên user_id
+        // Find the user in the database based on user_id
         User user = userRepository.findByUserId(userId).orElse(null);
 
-        // Kiểm tra nếu người dùng không tồn tại
+        // Check if the user does not exist
         if (user == null) {
             throw new RuntimeException("User not found for user_id: " + userId);
         }
 
-        // Sử dụng UserMapper để chuyển đổi từ User sang UserDTO
+        // Use UserMapper to convert User to UserDTO
         UserDTO userDTO = UserMapper.INSTANCE.userToUserDTO(user);
 
-        // Lấy user_id thực tế từ DB (cột id) để gọi API task-service
-        Long userDbId = user.getId(); // Lấy id thực tế từ bảng user
-
-        // Gọi API từ task-service để lấy danh sách task của user
-        String taskServiceUrl = "http://localhost:8081/api/tasks/" + userDbId;
-
-        // Gọi API từ task-service
         ResponseEntity<List<TaskDTO>> taskResponse = restTemplate.exchange(
-                taskServiceUrl,
+                "http://localhost:8081/api/tasks/user/" + user.getId(),
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<TaskDTO>>() {}
@@ -74,16 +67,13 @@ public class UserServiceImpl implements IUserService {
 
         List<TaskDTO> tasks = taskResponse.getBody();
 
-        // Tạo TaskUserResponseDTO và trả về
+        // Create TaskUserResponseDTO and return it
         TaskUserResponseDTO taskUserResponse = new TaskUserResponseDTO();
         taskUserResponse.setUser(userDTO);
-        taskUserResponse.setTasks(tasks); // Set danh sách tasks từ taskResponse
+        taskUserResponse.setTasks(tasks); // Set the list of tasks from taskResponse
 
         return taskUserResponse;
     }
-
-
-
     @Value("${user.batch.size}") //value is injected from the application.properties file
     private int batchSize;
     @Async  // Annotation for asynchronous execution
