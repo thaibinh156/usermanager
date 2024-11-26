@@ -8,9 +8,3 @@ CREATE TABLE users (
     sex VARCHAR(50),
     email VARCHAR(255) NOT NULL
 );
-
-SELECT count(*) from users
-
-SELECT * FROM categories
-
-SELECT * from tasks
