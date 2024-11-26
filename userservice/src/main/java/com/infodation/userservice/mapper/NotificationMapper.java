@@ -1,7 +1,7 @@
 package com.infodation.userservice.mapper;
 
-import com.infodation.userservice.models.notimodel.CreateNotificationDTO;
-import com.infodation.userservice.models.notimodel.Notifications;
+import com.infodation.userservice.models.dto.notification.CreateNotificationDTO;
+import com.infodation.userservice.models.Notifications;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;

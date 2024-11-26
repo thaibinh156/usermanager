@@ -3,7 +3,6 @@ package com.infodation.userservice.models;
 
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.infodation.userservice.models.notimodel.Notifications;
 
 import javax.persistence.*;
 import java.io.Serializable;
