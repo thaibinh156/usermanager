@@ -1,9 +1,10 @@
 package com.infodation.userservice.services;
 
+import com.infodation.userservice.exception.UserNotFoundException;
 import com.infodation.userservice.mapper.NotificationMapper;
 import com.infodation.userservice.models.User;
-import com.infodation.userservice.models.notimodel.CreateNotificationDTO;
-import com.infodation.userservice.models.notimodel.Notifications;
+import com.infodation.userservice.models.dto.notification.CreateNotificationDTO;
+import com.infodation.userservice.models.Notifications;
 import com.infodation.userservice.repositories.NotificationRepository;
 import com.infodation.userservice.repositories.UserRepository;
 import com.infodation.userservice.services.iservice.INotificationService;
@@ -22,24 +23,28 @@ public class NotificationServiceImpl implements INotificationService {
     }
 
     @Override
-    public Notifications saveNoti(CreateNotificationDTO notiDTO) {
-        // Find the user by userId
-        Optional<User> userOptional = userRepository.findByUserId(notiDTO.getUserId());
-        if (userOptional.isEmpty()) {
-            throw new RuntimeException("User not found");
+    public Notifications saveNotification(CreateNotificationDTO notiDTO) {
+        try {
+            // Find the user by userId
+            Optional<User> userOptional = userRepository.findByUserId(notiDTO.getUserId());
+            if (userOptional.isEmpty()) {
+                throw new UserNotFoundException("No user found with userId: " + notiDTO.getUserId());
+            }
+            // Get the user from the Optional
+            User user = userOptional.get();
+
+            // Use the mapper to convert DTO to entity
+            Notifications notification = NotificationMapper.INSTANCE.createNotificationDTOToNotification(notiDTO);
+
+            // Set the user in the notification
+            notification.setUser(user);
+
+            // Save the notification
+            return notiRepository.save(notification);
+        } catch (UserNotFoundException e) {
+            System.out.println(e.getMessage());
+            return null;
         }
-
-        // Get the user from the Optional
-        User user = userOptional.get();
-
-        // Use the mapper to convert DTO to entity
-        Notifications notification = NotificationMapper.INSTANCE.createNotificationDTOToNotification(notiDTO);
-
-        // Set the user in the notification
-        notification.setUser(user);
-
-        // Save the notification
-        return notiRepository.save(notification);
     }
 
 }

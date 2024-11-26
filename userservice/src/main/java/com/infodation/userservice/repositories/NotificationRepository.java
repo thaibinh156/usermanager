@@ -1,6 +1,6 @@
 package com.infodation.userservice.repositories;
 
-import com.infodation.userservice.models.notimodel.Notifications;
+import com.infodation.userservice.models.Notifications;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

@@ -1,7 +1,7 @@
 package com.infodation.userservice.controllers;
 
-import com.infodation.userservice.models.notimodel.CreateNotificationDTO;
-import com.infodation.userservice.models.notimodel.Notifications;
+import com.infodation.userservice.models.dto.notification.CreateNotificationDTO;
+import com.infodation.userservice.models.Notifications;
 import com.infodation.userservice.services.iservice.INotificationService;
 import com.infodation.userservice.utils.ApiResponse;
 import com.infodation.userservice.utils.ApiResponseUtil;
@@ -29,14 +29,14 @@ public class NotificationController {
     @PostMapping
     public ResponseEntity<ApiResponse<Notifications>> create(@Valid @RequestBody CreateNotificationDTO notificationDTO) {
         logger.info("Creating notification for user with ID: {}", notificationDTO.getUserId());
-        Notifications notification = notificationService.saveNoti(notificationDTO);
+        Notifications notification = notificationService.saveNotification(notificationDTO);
         HttpStatus status = HttpStatus.CREATED;
         String message = "The notification has been created";
         logger.info("User with ID {} received this notification", notificationDTO.getUserId());
 
         // Log the raw response to check the structure
         ApiResponse<Notifications> response = ApiResponseUtil.buildApiResponse(notification, status, message, null);
-        logger.info("Response to return: {}", response);  // Debugging the response
+        logger.debug("Response to return: {}", response);  // Debugging the response
 
         return new ResponseEntity<>(response, status);
     }

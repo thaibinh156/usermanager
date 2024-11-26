@@ -1,4 +1,4 @@
-package com.infodation.userservice.models.notimodel;
+package com.infodation.userservice.models.dto.notification;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

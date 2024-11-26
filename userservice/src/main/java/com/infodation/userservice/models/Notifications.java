@@ -1,4 +1,4 @@
-package com.infodation.userservice.models.notimodel;
+package com.infodation.userservice.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;

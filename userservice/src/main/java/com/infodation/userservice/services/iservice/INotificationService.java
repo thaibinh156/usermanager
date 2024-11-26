@@ -1,9 +1,9 @@
 package com.infodation.userservice.services.iservice;
 
-import com.infodation.userservice.models.notimodel.CreateNotificationDTO;
-import com.infodation.userservice.models.notimodel.Notifications;
+import com.infodation.userservice.models.dto.notification.CreateNotificationDTO;
+import com.infodation.userservice.models.Notifications;
 
 public interface INotificationService {
-    Notifications saveNoti(CreateNotificationDTO noti);
+    Notifications saveNotification(CreateNotificationDTO noti);
 
 }

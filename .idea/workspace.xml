@@ -7,15 +7,16 @@
     <list default="true" id="1d671b26-33f4-47fa-a7e0-bdd11454aee0" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/logs/application.log" beforeDir="false" afterPath="$PROJECT_DIR$/logs/application.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/task-service/src/main/java/com/infodation/task_service/controllers/TaskController.java" beforeDir="false" afterPath="$PROJECT_DIR$/task-service/src/main/java/com/infodation/task_service/controllers/TaskController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/task-service/src/main/java/com/infodation/task_service/models/DTO/TaskDTO.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/task-service/src/main/java/com/infodation/task_service/repositories/UserTaskAssignmentRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/task-service/src/main/java/com/infodation/task_service/repositories/TaskServiceRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/task-service/src/main/java/com/infodation/task_service/services/ITaskService.java" beforeDir="false" afterPath="$PROJECT_DIR$/task-service/src/main/java/com/infodation/task_service/services/ITaskService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/task-service/src/main/java/com/infodation/task_service/services/TaskServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/task-service/src/main/java/com/infodation/task_service/services/TaskServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/task-service/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/task-service/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/controllers/UsersController.java" beforeDir="false" afterPath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/controllers/UsersController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/services/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/services/UserServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/services/iservice/IUserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/services/iservice/IUserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/application.log.2024-11-22.0.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/logs/application.log.2024-11-25.0.gz" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/controllers/NotificationController.java" beforeDir="false" afterPath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/controllers/NotificationController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/mapper/NotificationMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/mapper/NotificationMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/models/User.java" beforeDir="false" afterPath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/models/User.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/models/notimodel/CreateNotificationDTO.java" beforeDir="false" afterPath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/models/dto/notification/CreateNotificationDTO.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/models/notimodel/Notifications.java" beforeDir="false" afterPath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/models/Notifications.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/repositories/NotificationRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/repositories/NotificationRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/services/NotificationServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/services/NotificationServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/services/iservice/INotificationService.java" beforeDir="false" afterPath="$PROJECT_DIR$/userservice/src/main/java/com/infodation/userservice/services/iservice/INotificationService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -25,8 +26,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Class" />
         <option value="Interface" />
+        <option value="Class" />
       </list>
     </option>
   </component>
