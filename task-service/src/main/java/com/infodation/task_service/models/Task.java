@@ -50,10 +50,6 @@ public class Task {
         updatedAt = new Date();
     }
 
-    public enum Priority {
-        LOW, MEDIUM, HIGH, URGENT
-    }
-
     public Long getId() {
         return id;
     }
