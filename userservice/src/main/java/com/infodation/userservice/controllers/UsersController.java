@@ -54,11 +54,9 @@ public class UsersController {
         }
 
         try {
-            // Chỉ thực hiện logic khi người dùng tồn tại
             TaskUserResponseDTO response = userService.getUserWithTasks(userId);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
-            // Xử lý lỗi bất ngờ
             logger.error("An error occurred while fetching tasks for user_id: " + userId, e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
