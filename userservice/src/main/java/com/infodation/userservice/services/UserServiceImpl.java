@@ -49,12 +49,6 @@ public class UserServiceImpl implements IUserService {
     public TaskUserResponseDTO getUserWithTasks(String userId) {
         // Find the user in the database based on user_id
         User user = userRepository.findByUserId(userId).orElse(null);
-
-        // Check if the user does not exist
-        if (user == null) {
-            throw new RuntimeException("User not found for user_id: " + userId);
-        }
-
         // Use UserMapper to convert User to UserDTO
         UserDTO userDTO = UserMapper.INSTANCE.userToUserDTO(user);
 

@@ -4,6 +4,7 @@ import com.infodation.userservice.models.TaskDTO.TaskUserResponseDTO;
 import com.infodation.userservice.models.User;
 import com.infodation.userservice.models.dto.user.CreateUserDTO;
 import com.infodation.userservice.models.dto.user.UpdateUserDTO;
+import com.infodation.userservice.repositories.UserRepository;
 import com.infodation.userservice.services.iservice.IUserService;
 import com.infodation.userservice.utils.ApiResponse;
 import org.springframework.data.domain.Page;
@@ -33,24 +34,36 @@ public class UsersController {
     private static final Logger logger = LoggerFactory.getLogger(UsersController.class);
 
     private final IUserService userService;
+    private final UserRepository userRepository;
 
-    public UsersController(IUserService userService, RestTemplate restTemplate) {
+    public UsersController(IUserService userService, UserRepository userRepository, RestTemplate restTemplate) {
         this.userService = userService;
+        this.userRepository = userRepository;
         this.restTemplate = restTemplate;
     }
     private final RestTemplate restTemplate;
     // API receives user_id and calls the task-service API to fetch the user's tasks
     @GetMapping("/{userId}/tasks")
     public ResponseEntity<TaskUserResponseDTO> getUserWithTasks(@PathVariable String userId) {
-        // Call the service method to get User and tasks information
+        // Kiểm tra xem người dùng có tồn tại không
+        User user = userRepository.findByUserId(userId).orElse(null);
+
+        if (user == null) {
+            logger.info("User not found for user_id: " + userId);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null); // Trả về 404
+        }
+
         try {
+            // Chỉ thực hiện logic khi người dùng tồn tại
             TaskUserResponseDTO response = userService.getUserWithTasks(userId);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
-            // If the user is not found
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            // Xử lý lỗi bất ngờ
+            logger.error("An error occurred while fetching tasks for user_id: " + userId, e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
 
     @PostMapping("/csv-migrate")
     public ResponseEntity<String> importUsers(@RequestPart("file") MultipartFile file) {
