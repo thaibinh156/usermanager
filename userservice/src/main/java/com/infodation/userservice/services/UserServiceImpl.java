@@ -189,12 +189,11 @@ public class UserServiceImpl implements IUserService {
     }
 
     public void checkUser(String userId) {
-        User user = userRepository.findByUserId(userId).orElse(null);
-
-        if (user == null) {
-            logger.info("User not found for user_id: " + userId);
-            throw new IllegalArgumentException("User not found for user_id: " + userId);
-        }
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> {
+                    logger.info("User not found for user_id: " + userId);
+                    return new IllegalArgumentException("User not found for user_id: " + userId);
+                });
     }
 
 }

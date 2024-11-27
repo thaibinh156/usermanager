@@ -42,12 +42,15 @@ public class UsersController {
     // API receives user_id and calls the task-service API to fetch the user's tasks
     @GetMapping("/{userId}/tasks")
     public ResponseEntity<TaskUserResponseDTO> getUserWithTasks(@PathVariable String userId) {
+        logger.info("Received request from userId: {}", userId);
         // Call the service method to get User and tasks information
         try {
             TaskUserResponseDTO response = userService.getUserWithTasks(userId);
+            logger.info("Successfully retrieved tasks for user ID: {}", userId);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {
             // If the user is not found
+            logger.warn("User with ID: {} not found. Error: {}", userId, e.getMessage());
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
