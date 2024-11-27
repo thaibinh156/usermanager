@@ -44,6 +44,15 @@ public class TaskServiceImpl implements ITaskService {
         String message;
         HttpStatus status;
 
+        final int TITLE_ROW_INDEX = 1;
+        final int DESCRIPTION_ROW_INDEX = 2;
+        final int CATEGORY_ROW_INDEX = 3;
+        final int STATUS_ROW_INDEX = 4;
+        final int DUE_DATE_ROW_INDEX = 5;
+        final int PRIORITY_ROW_INDEX = 6;
+        final int CREATED_AT_ROW_INDEX = 7;
+        final int UPDATED_AT_ROW_INDEX = 8;
+
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream()));
              CSVReader csvReader = new CSVReader(bufferedReader)) {
 
@@ -56,51 +65,51 @@ public class TaskServiceImpl implements ITaskService {
                 Optional<TaskCategory> category = Optional.empty();
                 Optional<TaskStatus> taskStatus = Optional.empty();
 
-                if (!row[3].isEmpty())
+                if (!row[CATEGORY_ROW_INDEX].isEmpty())
                     category = taskCategoryService.getCategoryById((long) Double.parseDouble(row[3]));
-                if (!row[4].isEmpty())
+                if (!row[STATUS_ROW_INDEX].isEmpty())
                     taskStatus = taskStatusService.getStatusById(Long.parseLong(row[4]));
 
                 if (taskStatus.isEmpty()) {
                     message = "Status not found at row " + i;
-                    log.error("Status not found at row " + i);
                     status = HttpStatus.NOT_FOUND;
+                    log.error(message);
                     return ApiResponseUtil.buildApiResponse(null, status, message, null);
                 }
 
                 Task newTask = new Task();
 
-                newTask.setTitle(row[1]);
-                newTask.setDescription(row[2]);
+                newTask.setTitle(row[TITLE_ROW_INDEX]);
+                newTask.setDescription(row[DESCRIPTION_ROW_INDEX]);
 
                 newTask.setCategory(category.isEmpty() ? null : category.get());
                 newTask.setStatus(taskStatus.get());
 
 
-                Date dueDate = row[5].isEmpty()? null: dueDateFormatter.parse(row[5]);
+                Date dueDate = row[DUE_DATE_ROW_INDEX].isEmpty()? null: dueDateFormatter.parse(row[5]);
                 newTask.setDueDate(dueDate);
 
-                newTask.setPriority(Priority.valueOf(row[6].toUpperCase()));
+                newTask.setPriority(Priority.valueOf(row[PRIORITY_ROW_INDEX].toUpperCase()));
 
-                Date createAt = dateFormatter.parse(row[7].substring(0, 23));
+                Date createAt = dateFormatter.parse(row[CREATED_AT_ROW_INDEX].substring(0, 23));
                 newTask.setCreatedAt(createAt);
-                Date updateAt = dateFormatter.parse(row[8].substring(0, 23));
+                Date updateAt = dateFormatter.parse(row[UPDATED_AT_ROW_INDEX].substring(0, 23));
                 newTask.setCreatedAt(updateAt);
-                log.info("Read row " + i + " successfully");
                 tasks.add(newTask);
             }
             log.info("Finished reading file. Total valid lines: {}", rows.size());
 
             taskRepository.saveAll(tasks);
             status = HttpStatus.OK;
-            message = "Imported Tasks into Database";
+            message = String.format("Import file '%s' successfully", file.getOriginalFilename());
+            log.info(message);
 
         } catch (Exception ex) {
-            throw new Exception(ex);
+            log.error(ex.getMessage());
+            throw new Exception(ex.getMessage());
         }
 
         return ApiResponseUtil.buildApiResponse(null, status, message, null);
-
     }
 }
 

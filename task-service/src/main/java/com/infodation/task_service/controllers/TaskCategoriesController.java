@@ -32,14 +32,14 @@ public class TaskCategoriesController {
         HttpStatus status;
 
         if (file == null || file.isEmpty()) {
-            log.error("The uploaded file is empty.");
-            message = "File is empty";
+            message = "The uploaded file is empty.";
             status = HttpStatus.BAD_REQUEST;
+            log.error(message);
         } else {
             taskCategoryService.importTaskCategoriesFromCSVFIle(file);
-            message = "Imported status into Database";
+            message = String.format("Import file '%s' successfully", file.getOriginalFilename());
             status = HttpStatus.OK;
-            log.info("Import file '{}' successfully", file.getOriginalFilename());
+            log.info(message);
         }
 
         ApiResponse<String> response = ApiResponseUtil.buildApiResponse(null, status, message, null);

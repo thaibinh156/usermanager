@@ -33,6 +33,11 @@ public class TaskStatusServiceImpl implements ITaskStatusService {
 
         Set<String> taskStatusNameInDbSet = taskStatusRepository.getAllTaskStatusName();
 
+        final int ID_ROW_INDEX = 0;
+        final int NAME_ROW_INDEX = 1;
+        final int DESCRIPTION_ROW_INDEX = 2;
+        final int CREATED_AT_ROW_INDEX = 3;
+
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream()));
              CSVReader csvReader = new CSVReader(bufferedReader)) {
 
@@ -49,13 +54,12 @@ public class TaskStatusServiceImpl implements ITaskStatusService {
                 else {
                     TaskStatus newStatus = new TaskStatus();
 
-                    newStatus.setId(Long.parseLong(row[0]));
-                    newStatus.setName(row[1]);
-                    newStatus.setDescription(row[2]);
-                    Date date = formatter.parse(row[3].substring(0, 23));
+                    newStatus.setId(Long.parseLong(row[ID_ROW_INDEX]));
+                    newStatus.setName(row[NAME_ROW_INDEX]);
+                    newStatus.setDescription(row[DESCRIPTION_ROW_INDEX]);
+                    Date date = formatter.parse(row[CREATED_AT_ROW_INDEX].substring(0, 23));
                     newStatus.setCreatedAt(date);
 
-                    log.info("Read row " + i + " successfully");
                     statuses.add(newStatus);
                 }
 
@@ -64,6 +68,7 @@ public class TaskStatusServiceImpl implements ITaskStatusService {
             taskStatusRepository.saveAll(statuses);
 
         } catch (Exception ex) {
+            log.error(ex.getMessage());
             throw new Exception(ex.getMessage());
         }
 

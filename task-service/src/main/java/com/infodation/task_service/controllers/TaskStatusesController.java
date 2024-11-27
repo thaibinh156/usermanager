@@ -21,26 +21,22 @@ public class TaskStatusesController {
         this.taskStatusService = taskStatusService;
     }
 
-    @GetMapping
-    public String hello(){
-        return "Hello";
-    }
-
     @PostMapping("/migrate")
     public ResponseEntity<ApiResponse<?>> importStatuses(@RequestParam("file") MultipartFile file) throws Exception {
         log.info("Starting import process for file: '{}'", file.getOriginalFilename());
+
         String message;
         HttpStatus status;
 
-        if (file != null || file.isEmpty()) {
-            log.error("The uploaded file is empty.");
-            message = "File is empty";
+        if (file == null || file.isEmpty()) {
+            message = "The uploaded file is empty.";
             status = HttpStatus.BAD_REQUEST;
+            log.error(message);
         } else {
             taskStatusService.importTaskStatusesFromCSVFIle(file);
-            log.info("Import file '{}' successfully", file.getOriginalFilename());
-            message = "Imported status into Database";
+            message = String.format("Import file '%s' successfully", file.getOriginalFilename());
             status = HttpStatus.OK;
+            log.info(message);
         }
 
         ApiResponse<String> response = ApiResponseUtil.buildApiResponse(null, status, message, null);

@@ -32,14 +32,15 @@ public class TasksController {
         ApiResponse<?> response;
 
         if (file == null || file.isEmpty()) {
-            log.error("The uploaded file is empty.");
+            String message = ("The uploaded file is empty.");
             status = HttpStatus.BAD_REQUEST;
-            response = ApiResponseUtil.buildApiResponse(null, HttpStatus.BAD_REQUEST, "File is empty", null);
+            response = ApiResponseUtil.buildApiResponse(null, HttpStatus.BAD_REQUEST, message, null);
+            log.error(message);
         } else {
             status = HttpStatus.OK;
             response = taskService.importTaskFromCSVFile(file);
-            log.info("Import file '{}' successfully", file.getOriginalFilename());
         }
+
         return new ResponseEntity<>(response, status);
     }
 }

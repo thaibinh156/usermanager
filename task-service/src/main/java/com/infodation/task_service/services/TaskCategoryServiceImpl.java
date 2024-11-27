@@ -33,27 +33,30 @@ public class TaskCategoryServiceImpl implements ITaskCategoryService {
 
         Set<String> taskCategoryNameInDbSet = taskCategoryRepository.getAllCategoryName();
 
+        final int ID_ROW_INDEX = 0;
+        final int NAME_ROW_INDEX = 1;
+        final int DESCRIPTION_ROW_INDEX = 2;
+        final int CREATED_AT_ROW_INDEX = 3;
+
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream()));
              CSVReader csvReader = new CSVReader(bufferedReader)) {
+
             List<String[]> rows = csvReader.readAll();
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
             for (int i = 1; i < rows.size(); i++) {
                 String[] row = rows.get(i);
-                if (taskCategoryNameInDbSet.contains(row[1]))
-                {
+                if (taskCategoryNameInDbSet.contains(row[1])) {
                     log.warn("Categories is existed");
                     throw new Exception("Categories is existed");
-                }
-                else {
+                } else {
                     TaskCategory newCategory = new TaskCategory();
-                    newCategory.setId(Long.parseLong(row[0]));
-                    newCategory.setName(row[1]);
-                    newCategory.setDescription(row[2]);
-                    Date date = formatter.parse(row[3].substring(0, 23));
+                    newCategory.setId(Long.parseLong(row[ID_ROW_INDEX]));
+                    newCategory.setName(row[NAME_ROW_INDEX]);
+                    newCategory.setDescription(row[DESCRIPTION_ROW_INDEX]);
+                    Date date = formatter.parse(row[CREATED_AT_ROW_INDEX].substring(0, 23));
                     newCategory.setCreatedAt(date);
 
-                    log.info("Read row " + i + " successfully");
                     statuses.add(newCategory);
                 }
 
@@ -62,6 +65,7 @@ public class TaskCategoryServiceImpl implements ITaskCategoryService {
             taskCategoryRepository.saveAll(statuses);
 
         } catch (Exception ex) {
+            log.error(ex.getMessage());
             throw new Exception(ex.getMessage());
         }
 
