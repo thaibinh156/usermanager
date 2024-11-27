@@ -11,11 +11,14 @@ import com.infodation.task_service.services.iServices.ITaskStatusService;
 import com.infodation.task_service.utils.ApiResponse;
 import com.infodation.task_service.utils.ApiResponseUtil;
 import com.opencsv.CSVReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -26,6 +29,7 @@ public class TaskServiceImpl implements ITaskService {
     private final TaskRepository taskRepository;
     private final ITaskCategoryService taskCategoryService;
     private final ITaskStatusService taskStatusService;
+    private static final Logger log = LoggerFactory.getLogger(TaskServiceImpl.class);
 
     public TaskServiceImpl(TaskRepository taskRepository, ITaskCategoryService taskCategoryService, ITaskStatusService taskStatusService) {
         this.taskRepository = taskRepository;
@@ -39,9 +43,13 @@ public class TaskServiceImpl implements ITaskService {
         List<Task> tasks = new ArrayList<>();
         String message;
         HttpStatus status;
-        try {
-            CSVReader reader = new CSVReader(new InputStreamReader(file.getInputStream()));
-            List<String[]> rows = reader.readAll();
+
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream()));
+             CSVReader csvReader = new CSVReader(bufferedReader)) {
+
+            List<String[]> rows = csvReader.readAll();
+            SimpleDateFormat dueDateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
             for (int i = 1; i < rows.size(); i++) {
                 String[] row = rows.get(i);
@@ -55,6 +63,7 @@ public class TaskServiceImpl implements ITaskService {
 
                 if (taskStatus.isEmpty()) {
                     message = "Status not found at row " + i;
+                    log.error("Status not found at row " + i);
                     status = HttpStatus.NOT_FOUND;
                     return ApiResponseUtil.buildApiResponse(null, status, message, null);
                 }
@@ -67,24 +76,25 @@ public class TaskServiceImpl implements ITaskService {
                 newTask.setCategory(category.isEmpty() ? null : category.get());
                 newTask.setStatus(taskStatus.get());
 
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-                Date dueDate = row[5].isEmpty()? null: formatter.parse(row[5]);
+
+                Date dueDate = row[5].isEmpty()? null: dueDateFormatter.parse(row[5]);
                 newTask.setDueDate(dueDate);
 
                 newTask.setPriority(Priority.valueOf(row[6].toUpperCase()));
 
-                formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-                Date createAt = formatter.parse(row[7].substring(0, 23));
+                Date createAt = dateFormatter.parse(row[7].substring(0, 23));
                 newTask.setCreatedAt(createAt);
-                Date updateAt = formatter.parse(row[8].substring(0, 23));
+                Date updateAt = dateFormatter.parse(row[8].substring(0, 23));
                 newTask.setCreatedAt(updateAt);
-
+                log.info("Read row " + i + " successfully");
                 tasks.add(newTask);
             }
+            log.info("Finished reading file. Total valid lines: {}", rows.size());
 
             taskRepository.saveAll(tasks);
             status = HttpStatus.OK;
             message = "Imported Tasks into Database";
+
         } catch (Exception ex) {
             throw new Exception(ex);
         }
