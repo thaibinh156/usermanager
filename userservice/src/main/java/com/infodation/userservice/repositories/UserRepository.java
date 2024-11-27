@@ -14,11 +14,11 @@ import java.util.Set;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-    @Query("SELECT u FROM users u " +
+    @Query("SELECT u FROM User u " +
             "WHERE :name = '' OR u.firstName LIKE %:name% OR u.lastName LIKE %:name%")
     Page<User> findByName(@Param("name") String name, Pageable pageable);
 
-    @Query("SELECT u.userId FROM users u")
+    @Query(value = "SELECT u.userId FROM User u", nativeQuery = true)
     Set<String> findAllUserIds();
 
     Optional<User> findByUserId(String userId);
