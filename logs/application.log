@@ -9613,3 +9613,351 @@ Caused by: org.hibernate.hql.internal.ast.QuerySyntaxException: users is not map
 	at org.hibernate.hql.internal.ast.QueryTranslatorImpl.analyze(QueryTranslatorImpl.java:276)
 	at org.hibernate.hql.internal.ast.QueryTranslatorImpl.doCompile(QueryTranslatorImpl.java:192)
 	... 91 common frames omitted
+2024-11-27 15:20:39 - Starting UserServiceApplication using Java 11.0.24 on LAMHOBAN with PID 18868 (D:\infodation\back-end\userservice\target\classes started by Binh Diep in D:\infodation\back-end)
+2024-11-27 15:20:39 - No active profile set, falling back to 1 default profile: "default"
+2024-11-27 15:20:39 - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-11-27 15:20:39 - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-11-27 15:20:40 - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-11-27 15:20:40 - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-11-27 15:20:40 - Finished Spring Data repository scanning in 43 ms. Found 2 JPA repository interfaces.
+2024-11-27 15:20:40 - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-11-27 15:20:40 - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2024-11-27 15:20:40 - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.infodation.userservice.repositories.NotificationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-11-27 15:20:40 - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.infodation.userservice.repositories.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-11-27 15:20:40 - Finished Spring Data repository scanning in 3 ms. Found 0 Redis repository interfaces.
+2024-11-27 15:20:40 - Tomcat initialized with port(s): 8080 (http)
+2024-11-27 15:20:40 - Starting service [Tomcat]
+2024-11-27 15:20:40 - Starting Servlet engine: [Apache Tomcat/9.0.64]
+2024-11-27 15:20:40 - Initializing Spring embedded WebApplicationContext
+2024-11-27 15:20:40 - Root WebApplicationContext: initialization completed in 1312 ms
+2024-11-27 15:20:40 - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-11-27 15:20:40 - HHH000412: Hibernate ORM core version 5.6.9.Final
+2024-11-27 15:20:41 - HikariPool-1 - Starting...
+2024-11-27 15:20:41 - HikariPool-1 - Start completed.
+2024-11-27 15:20:41 - HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2024-11-27 15:20:41 - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2024-11-27 15:20:41 - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-11-27 15:20:42 - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-11-27 15:20:42 - Eagerly initializing {org.springframework.boot.autoconfigure.security.servlet.SpringBootWebSecurityConfiguration$WebSecurityEnablerConfiguration=org.springframework.boot.autoconfigure.security.servlet.SpringBootWebSecurityConfiguration$WebSecurityEnablerConfiguration@4db1f2aa}
+2024-11-27 15:20:42 - No authenticationProviders and no parentAuthenticationManager defined. Returning null.
+2024-11-27 15:20:42 - Adding web access control expression [permitAll] for Ant [pattern='/hello']
+2024-11-27 15:20:42 - Adding web access control expression [permitAll] for Ant [pattern='/users/**']
+2024-11-27 15:20:42 - Adding web access control expression [authenticated] for any request
+2024-11-27 15:20:42 - Validated configuration attributes
+2024-11-27 15:20:42 - Validated configuration attributes
+2024-11-27 15:20:42 - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@15a0a875, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@76660d61, org.springframework.security.web.context.SecurityContextPersistenceFilter@21d3ee67, org.springframework.security.web.header.HeaderWriterFilter@4a216366, org.springframework.security.web.authentication.logout.LogoutFilter@6a929187, org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter@618df0d8, org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter@4f14fd7d, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@4191df77, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@50041368, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@8ed1e08, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@40b42d48, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@2dd606ee, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@1e38a08a, org.springframework.security.web.session.SessionManagementFilter@69eff458, org.springframework.security.web.access.ExceptionTranslationFilter@1cecf86c, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@5523a932]
+2024-11-27 15:20:42 - LiveReload server is running on port 35729
+2024-11-27 15:20:42 - Tomcat started on port(s): 8080 (http) with context path ''
+2024-11-27 15:20:42 - Started UserServiceApplication in 3.928 seconds (JVM running for 5.353)
+2024-11-27 15:21:28 - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-11-27 15:21:28 - HikariPool-1 - Shutdown initiated...
+2024-11-27 15:21:28 - HikariPool-1 - Shutdown completed.
+2024-11-27 15:22:09 - Starting UserServiceApplication using Java 11.0.24 on LAMHOBAN with PID 12264 (D:\infodation\back-end\userservice\target\classes started by Binh Diep in D:\infodation\back-end)
+2024-11-27 15:22:09 - No active profile set, falling back to 1 default profile: "default"
+2024-11-27 15:22:09 - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-11-27 15:22:09 - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-11-27 15:22:09 - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-11-27 15:22:09 - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-11-27 15:22:09 - Finished Spring Data repository scanning in 47 ms. Found 2 JPA repository interfaces.
+2024-11-27 15:22:09 - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-11-27 15:22:09 - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2024-11-27 15:22:09 - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.infodation.userservice.repositories.NotificationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-11-27 15:22:09 - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.infodation.userservice.repositories.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-11-27 15:22:09 - Finished Spring Data repository scanning in 5 ms. Found 0 Redis repository interfaces.
+2024-11-27 15:22:10 - Tomcat initialized with port(s): 8080 (http)
+2024-11-27 15:22:10 - Starting service [Tomcat]
+2024-11-27 15:22:10 - Starting Servlet engine: [Apache Tomcat/9.0.64]
+2024-11-27 15:22:10 - Initializing Spring embedded WebApplicationContext
+2024-11-27 15:22:10 - Root WebApplicationContext: initialization completed in 1316 ms
+2024-11-27 15:22:10 - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-11-27 15:22:10 - HHH000412: Hibernate ORM core version 5.6.9.Final
+2024-11-27 15:22:10 - HikariPool-1 - Starting...
+2024-11-27 15:22:10 - HikariPool-1 - Start completed.
+2024-11-27 15:22:10 - HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2024-11-27 15:22:11 - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2024-11-27 15:22:11 - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-11-27 15:22:11 - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-11-27 15:22:11 - Eagerly initializing {org.springframework.boot.autoconfigure.security.servlet.SpringBootWebSecurityConfiguration$WebSecurityEnablerConfiguration=org.springframework.boot.autoconfigure.security.servlet.SpringBootWebSecurityConfiguration$WebSecurityEnablerConfiguration@7bb72e0b}
+2024-11-27 15:22:11 - No authenticationProviders and no parentAuthenticationManager defined. Returning null.
+2024-11-27 15:22:11 - Adding web access control expression [permitAll] for Ant [pattern='/hello']
+2024-11-27 15:22:11 - Adding web access control expression [permitAll] for Ant [pattern='/users/**']
+2024-11-27 15:22:11 - Adding web access control expression [authenticated] for any request
+2024-11-27 15:22:11 - Validated configuration attributes
+2024-11-27 15:22:11 - Validated configuration attributes
+2024-11-27 15:22:11 - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@858e829, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@55ac3cb7, org.springframework.security.web.context.SecurityContextPersistenceFilter@584bcfb3, org.springframework.security.web.header.HeaderWriterFilter@1b664555, org.springframework.security.web.authentication.logout.LogoutFilter@d88788c, org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter@26d2b71c, org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter@70f4de72, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@43adfd27, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@4fd1f725, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@5521ffbf, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@7de52033, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@4772d96e, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@7447822c, org.springframework.security.web.session.SessionManagementFilter@2ee6b7ef, org.springframework.security.web.access.ExceptionTranslationFilter@371ce49b, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@9c39d1b]
+2024-11-27 15:22:12 - LiveReload server is running on port 35729
+2024-11-27 15:22:12 - Tomcat started on port(s): 8080 (http) with context path ''
+2024-11-27 15:22:12 - Started UserServiceApplication in 3.57 seconds (JVM running for 4.366)
+2024-11-27 15:22:52 - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-11-27 15:22:52 - HikariPool-1 - Shutdown initiated...
+2024-11-27 15:22:52 - HikariPool-1 - Shutdown completed.
+2024-11-27 15:22:55 - Starting UserServiceApplication using Java 11.0.24 on LAMHOBAN with PID 2892 (D:\infodation\back-end\userservice\target\classes started by Binh Diep in D:\infodation\back-end)
+2024-11-27 15:22:55 - No active profile set, falling back to 1 default profile: "default"
+2024-11-27 15:22:55 - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-11-27 15:22:55 - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-11-27 15:22:56 - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-11-27 15:22:56 - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-11-27 15:22:56 - Finished Spring Data repository scanning in 45 ms. Found 2 JPA repository interfaces.
+2024-11-27 15:22:56 - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-11-27 15:22:56 - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2024-11-27 15:22:56 - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.infodation.userservice.repositories.NotificationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-11-27 15:22:56 - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.infodation.userservice.repositories.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-11-27 15:22:56 - Finished Spring Data repository scanning in 3 ms. Found 0 Redis repository interfaces.
+2024-11-27 15:22:56 - Tomcat initialized with port(s): 8080 (http)
+2024-11-27 15:22:56 - Starting service [Tomcat]
+2024-11-27 15:22:56 - Starting Servlet engine: [Apache Tomcat/9.0.64]
+2024-11-27 15:22:56 - Initializing Spring embedded WebApplicationContext
+2024-11-27 15:22:56 - Root WebApplicationContext: initialization completed in 1335 ms
+2024-11-27 15:22:57 - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-11-27 15:22:57 - HHH000412: Hibernate ORM core version 5.6.9.Final
+2024-11-27 15:22:57 - HikariPool-1 - Starting...
+2024-11-27 15:22:57 - HikariPool-1 - Start completed.
+2024-11-27 15:22:57 - HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2024-11-27 15:22:57 - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2024-11-27 15:22:57 - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-11-27 15:22:58 - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-11-27 15:22:58 - Eagerly initializing {org.springframework.boot.autoconfigure.security.servlet.SpringBootWebSecurityConfiguration$WebSecurityEnablerConfiguration=org.springframework.boot.autoconfigure.security.servlet.SpringBootWebSecurityConfiguration$WebSecurityEnablerConfiguration@35caafa1}
+2024-11-27 15:22:58 - No authenticationProviders and no parentAuthenticationManager defined. Returning null.
+2024-11-27 15:22:58 - Adding web access control expression [permitAll] for Ant [pattern='/hello']
+2024-11-27 15:22:58 - Adding web access control expression [permitAll] for Ant [pattern='/users/**']
+2024-11-27 15:22:58 - Adding web access control expression [authenticated] for any request
+2024-11-27 15:22:58 - Validated configuration attributes
+2024-11-27 15:22:58 - Validated configuration attributes
+2024-11-27 15:22:58 - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@323506ad, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@327e2e3e, org.springframework.security.web.context.SecurityContextPersistenceFilter@7d36cbdc, org.springframework.security.web.header.HeaderWriterFilter@555bef7e, org.springframework.security.web.authentication.logout.LogoutFilter@6dae7554, org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter@7cd9ef35, org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter@161ef52b, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@250d109a, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@5e737217, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@1b00c203, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@122eeba, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@fc8094c, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@49189e1a, org.springframework.security.web.session.SessionManagementFilter@69b812ac, org.springframework.security.web.access.ExceptionTranslationFilter@126f155c, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@6ee4b25b]
+2024-11-27 15:22:58 - LiveReload server is running on port 35729
+2024-11-27 15:22:58 - Tomcat started on port(s): 8080 (http) with context path ''
+2024-11-27 15:22:59 - Started UserServiceApplication in 3.857 seconds (JVM running for 5.04)
+2024-11-27 15:24:30 - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-11-27 15:24:30 - HikariPool-1 - Shutdown initiated...
+2024-11-27 15:24:30 - HikariPool-1 - Shutdown completed.
+2024-11-27 15:24:59 - Starting UserServiceApplication using Java 11.0.24 on LAMHOBAN with PID 19864 (D:\infodation\back-end\userservice\target\classes started by Binh Diep in D:\infodation\back-end)
+2024-11-27 15:24:59 - No active profile set, falling back to 1 default profile: "default"
+2024-11-27 15:24:59 - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-11-27 15:24:59 - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-11-27 15:25:00 - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-11-27 15:25:00 - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-11-27 15:25:00 - Finished Spring Data repository scanning in 55 ms. Found 2 JPA repository interfaces.
+2024-11-27 15:25:00 - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-11-27 15:25:00 - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2024-11-27 15:25:00 - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.infodation.userservice.repositories.NotificationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-11-27 15:25:00 - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.infodation.userservice.repositories.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-11-27 15:25:00 - Finished Spring Data repository scanning in 4 ms. Found 0 Redis repository interfaces.
+2024-11-27 15:25:00 - Tomcat initialized with port(s): 8080 (http)
+2024-11-27 15:25:00 - Starting service [Tomcat]
+2024-11-27 15:25:00 - Starting Servlet engine: [Apache Tomcat/9.0.64]
+2024-11-27 15:25:00 - Initializing Spring embedded WebApplicationContext
+2024-11-27 15:25:00 - Root WebApplicationContext: initialization completed in 1462 ms
+2024-11-27 15:25:01 - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-11-27 15:25:01 - HHH000412: Hibernate ORM core version 5.6.9.Final
+2024-11-27 15:25:01 - HikariPool-1 - Starting...
+2024-11-27 15:25:01 - HikariPool-1 - Start completed.
+2024-11-27 15:25:01 - HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2024-11-27 15:25:01 - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2024-11-27 15:25:01 - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-11-27 15:25:02 - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-11-27 15:25:02 - Eagerly initializing {org.springframework.boot.autoconfigure.security.servlet.SpringBootWebSecurityConfiguration$WebSecurityEnablerConfiguration=org.springframework.boot.autoconfigure.security.servlet.SpringBootWebSecurityConfiguration$WebSecurityEnablerConfiguration@7e54bb93}
+2024-11-27 15:25:02 - No authenticationProviders and no parentAuthenticationManager defined. Returning null.
+2024-11-27 15:25:02 - Adding web access control expression [permitAll] for Ant [pattern='/hello']
+2024-11-27 15:25:02 - Adding web access control expression [permitAll] for Ant [pattern='/users/**']
+2024-11-27 15:25:02 - Adding web access control expression [authenticated] for any request
+2024-11-27 15:25:02 - Validated configuration attributes
+2024-11-27 15:25:02 - Validated configuration attributes
+2024-11-27 15:25:02 - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@18ea8da2, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@2be95486, org.springframework.security.web.context.SecurityContextPersistenceFilter@f71a679, org.springframework.security.web.header.HeaderWriterFilter@505348c3, org.springframework.security.web.authentication.logout.LogoutFilter@5340c0b, org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter@18dfdb83, org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter@71ed3748, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@1788f935, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@12829304, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@3aea549c, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@729f5d71, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@2c0ada4d, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@54ff7591, org.springframework.security.web.session.SessionManagementFilter@21c6518f, org.springframework.security.web.access.ExceptionTranslationFilter@356d4517, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@7499f0f6]
+2024-11-27 15:25:02 - LiveReload server is running on port 35729
+2024-11-27 15:25:03 - Tomcat started on port(s): 8080 (http) with context path ''
+2024-11-27 15:25:03 - Started UserServiceApplication in 4.26 seconds (JVM running for 5.1)
+2024-11-27 15:32:31 - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-11-27 15:32:31 - HikariPool-1 - Shutdown initiated...
+2024-11-27 15:32:31 - HikariPool-1 - Shutdown completed.
+2024-11-27 15:34:19 - Starting UserServiceApplication using Java 21.0.3 on LAMHOBAN with PID 2844 (D:\infodation\back-end\userservice\target\classes started by Binh Diep in D:\infodation\back-end)
+2024-11-27 15:34:19 - No active profile set, falling back to 1 default profile: "default"
+2024-11-27 15:34:19 - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-11-27 15:34:19 - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-11-27 15:34:20 - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-11-27 15:34:20 - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-11-27 15:34:20 - Finished Spring Data repository scanning in 101 ms. Found 2 JPA repository interfaces.
+2024-11-27 15:34:20 - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-11-27 15:34:20 - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2024-11-27 15:34:20 - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.infodation.userservice.repositories.NotificationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-11-27 15:34:20 - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.infodation.userservice.repositories.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-11-27 15:34:20 - Finished Spring Data repository scanning in 5 ms. Found 0 Redis repository interfaces.
+2024-11-27 15:34:21 - Tomcat initialized with port(s): 8080 (http)
+2024-11-27 15:34:21 - Starting service [Tomcat]
+2024-11-27 15:34:21 - Starting Servlet engine: [Apache Tomcat/9.0.64]
+2024-11-27 15:34:21 - Initializing Spring embedded WebApplicationContext
+2024-11-27 15:34:21 - Root WebApplicationContext: initialization completed in 1392 ms
+2024-11-27 15:34:21 - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-11-27 15:34:21 - HHH000412: Hibernate ORM core version 5.6.9.Final
+2024-11-27 15:34:21 - HikariPool-1 - Starting...
+2024-11-27 15:34:21 - HikariPool-1 - Start completed.
+2024-11-27 15:34:21 - HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2024-11-27 15:34:22 - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2024-11-27 15:34:22 - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-11-27 15:34:22 - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-11-27 15:34:22 - Eagerly initializing {org.springframework.boot.autoconfigure.security.servlet.SpringBootWebSecurityConfiguration$WebSecurityEnablerConfiguration=org.springframework.boot.autoconfigure.security.servlet.SpringBootWebSecurityConfiguration$WebSecurityEnablerConfiguration@253f452e}
+2024-11-27 15:34:22 - No authenticationProviders and no parentAuthenticationManager defined. Returning null.
+2024-11-27 15:34:23 - Adding web access control expression [permitAll] for Ant [pattern='/hello']
+2024-11-27 15:34:23 - Adding web access control expression [permitAll] for Ant [pattern='/users/**']
+2024-11-27 15:34:23 - Adding web access control expression [authenticated] for any request
+2024-11-27 15:34:23 - Validated configuration attributes
+2024-11-27 15:34:23 - Validated configuration attributes
+2024-11-27 15:34:23 - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@4e8c2241, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@61010678, org.springframework.security.web.context.SecurityContextPersistenceFilter@37aa6555, org.springframework.security.web.header.HeaderWriterFilter@5388be26, org.springframework.security.web.authentication.logout.LogoutFilter@32212f79, org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter@eddb4fb, org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter@27d25e3a, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@44cb5c57, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@1c2f1482, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@4e91335e, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@64b35700, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@1c9b5bb3, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@4128dd8f, org.springframework.security.web.session.SessionManagementFilter@6f35a118, org.springframework.security.web.access.ExceptionTranslationFilter@3a28bd4a, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@57335ac3]
+2024-11-27 15:34:23 - LiveReload server is running on port 35729
+2024-11-27 15:34:23 - Tomcat started on port(s): 8080 (http) with context path ''
+2024-11-27 15:34:23 - Started UserServiceApplication in 4.027 seconds (JVM running for 4.721)
+2024-11-27 15:39:52 - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-11-27 15:39:52 - HikariPool-1 - Shutdown initiated...
+2024-11-27 15:39:52 - HikariPool-1 - Shutdown completed.
+2024-11-27 15:39:52 - Starting UserServiceApplication using Java 21.0.3 on LAMHOBAN with PID 2844 (D:\infodation\back-end\userservice\target\classes started by Binh Diep in D:\infodation\back-end)
+2024-11-27 15:39:52 - No active profile set, falling back to 1 default profile: "default"
+2024-11-27 15:39:52 - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-11-27 15:39:52 - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-11-27 15:39:52 - Finished Spring Data repository scanning in 3 ms. Found 0 JPA repository interfaces.
+2024-11-27 15:39:52 - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-11-27 15:39:52 - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2024-11-27 15:39:52 - Finished Spring Data repository scanning in 1 ms. Found 0 Redis repository interfaces.
+2024-11-27 15:39:53 - Tomcat initialized with port(s): 8080 (http)
+2024-11-27 15:39:53 - Starting service [Tomcat]
+2024-11-27 15:39:53 - Starting Servlet engine: [Apache Tomcat/9.0.64]
+2024-11-27 15:39:53 - Initializing Spring embedded WebApplicationContext
+2024-11-27 15:39:53 - Root WebApplicationContext: initialization completed in 842 ms
+2024-11-27 15:39:53 - HikariPool-2 - Starting...
+2024-11-27 15:39:53 - HikariPool-2 - Start completed.
+2024-11-27 15:39:53 - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-11-27 15:39:53 - HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2024-11-27 15:39:53 - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2024-11-27 15:39:53 - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-11-27 15:39:53 - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-11-27 15:39:53 - LiveReload server is running on port 35729
+2024-11-27 15:39:53 - Eagerly initializing {org.springframework.boot.autoconfigure.security.servlet.SpringBootWebSecurityConfiguration$WebSecurityEnablerConfiguration=org.springframework.boot.autoconfigure.security.servlet.SpringBootWebSecurityConfiguration$WebSecurityEnablerConfiguration@46b1cbe0}
+2024-11-27 15:39:53 - No authenticationProviders and no parentAuthenticationManager defined. Returning null.
+2024-11-27 15:39:53 - Adding web access control expression [authenticated] for any request
+2024-11-27 15:39:53 - Validated configuration attributes
+2024-11-27 15:39:53 - Validated configuration attributes
+2024-11-27 15:39:53 - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@123131aa, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@2c06a01d, org.springframework.security.web.context.SecurityContextPersistenceFilter@7225b526, org.springframework.security.web.header.HeaderWriterFilter@4c45e2b2, org.springframework.security.web.csrf.CsrfFilter@22455aed, org.springframework.security.web.authentication.logout.LogoutFilter@5a07a3ae, org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter@7e77e789, org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter@3fc51254, org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter@20acb43c, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@61a7b313, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@155d411b, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@fc8d61, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@634fafbe, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@3cd4f5ea, org.springframework.security.oauth2.client.web.OAuth2AuthorizationCodeGrantFilter@3a12764c, org.springframework.security.web.session.SessionManagementFilter@7abf1aae, org.springframework.security.web.access.ExceptionTranslationFilter@49c76d9e, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@646e45a6]
+2024-11-27 15:39:53 - Tomcat started on port(s): 8080 (http) with context path ''
+2024-11-27 15:39:54 - Started UserServiceApplication in 1.717 seconds (JVM running for 335.121)
+2024-11-27 15:39:54 - Condition evaluation delta:
+
+
+==========================
+CONDITION EVALUATION DELTA
+==========================
+
+
+Positive matches:
+-----------------
+
+   JpaBaseConfiguration#entityManagerFactory matched:
+      - @ConditionalOnMissingBean (types: org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean,javax.persistence.EntityManagerFactory; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   JpaBaseConfiguration#transactionManager matched:
+      - @ConditionalOnMissingBean (types: org.springframework.transaction.TransactionManager; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   OAuth2WebSecurityConfiguration.OAuth2SecurityFilterChainConfiguration matched:
+      - AllNestedConditions 2 matched 0 did not; NestedCondition on DefaultWebSecurityCondition.Beans @ConditionalOnMissingBean (types: org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter,org.springframework.security.web.SecurityFilterChain; SearchStrategy: all) did not find any beans; NestedCondition on DefaultWebSecurityCondition.Classes @ConditionalOnClass found required classes 'org.springframework.security.web.SecurityFilterChain', 'org.springframework.security.config.annotation.web.builders.HttpSecurity' (DefaultWebSecurityCondition)
+
+   TransactionAutoConfiguration.EnableTransactionManagementConfiguration matched:
+      - @ConditionalOnBean (types: org.springframework.transaction.TransactionManager; SearchStrategy: all) found bean 'transactionManager'; @ConditionalOnMissingBean (types: org.springframework.transaction.annotation.AbstractTransactionManagementConfiguration; SearchStrategy: all) did not find any beans (OnBeanCondition)
+
+   TransactionAutoConfiguration.EnableTransactionManagementConfiguration.CglibAutoProxyConfiguration matched:
+      - @ConditionalOnProperty (spring.aop.proxy-target-class=true) matched (OnPropertyCondition)
+
+
+Negative matches:
+-----------------
+
+    None
+
+
+Exclusions:
+-----------
+
+    None
+
+
+Unconditional classes:
+----------------------
+
+    None
+
+
+
+2024-11-27 15:42:37 - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-11-27 15:42:37 - HikariPool-2 - Shutdown initiated...
+2024-11-27 15:42:37 - HikariPool-2 - Shutdown completed.
+2024-11-27 15:45:20 - Starting UserServiceApplication using Java 11.0.24 on LAMHOBAN with PID 23560 (D:\infodation\back-end\userservice\target\classes started by Binh Diep in D:\infodation\back-end)
+2024-11-27 15:45:20 - No active profile set, falling back to 1 default profile: "default"
+2024-11-27 15:45:20 - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-11-27 15:45:20 - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-11-27 15:45:21 - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-11-27 15:45:21 - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-11-27 15:45:21 - Finished Spring Data repository scanning in 37 ms. Found 2 JPA repository interfaces.
+2024-11-27 15:45:21 - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-11-27 15:45:21 - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2024-11-27 15:45:21 - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.infodation.userservice.repositories.NotificationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-11-27 15:45:21 - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.infodation.userservice.repositories.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-11-27 15:45:21 - Finished Spring Data repository scanning in 3 ms. Found 0 Redis repository interfaces.
+2024-11-27 15:45:21 - Tomcat initialized with port(s): 8080 (http)
+2024-11-27 15:45:21 - Starting service [Tomcat]
+2024-11-27 15:45:21 - Starting Servlet engine: [Apache Tomcat/9.0.64]
+2024-11-27 15:45:21 - Initializing Spring embedded WebApplicationContext
+2024-11-27 15:45:21 - Root WebApplicationContext: initialization completed in 1302 ms
+2024-11-27 15:45:21 - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-11-27 15:45:21 - HHH000412: Hibernate ORM core version 5.6.9.Final
+2024-11-27 15:45:22 - HikariPool-1 - Starting...
+2024-11-27 15:45:22 - HikariPool-1 - Start completed.
+2024-11-27 15:45:22 - HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2024-11-27 15:45:22 - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2024-11-27 15:45:22 - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-11-27 15:45:22 - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-11-27 15:45:23 - Eagerly initializing {org.springframework.boot.autoconfigure.security.servlet.SpringBootWebSecurityConfiguration$WebSecurityEnablerConfiguration=org.springframework.boot.autoconfigure.security.servlet.SpringBootWebSecurityConfiguration$WebSecurityEnablerConfiguration@30a7ef86}
+2024-11-27 15:45:23 - No authenticationProviders and no parentAuthenticationManager defined. Returning null.
+2024-11-27 15:45:23 - Adding web access control expression [permitAll] for Ant [pattern='/hello']
+2024-11-27 15:45:23 - Adding web access control expression [permitAll] for Ant [pattern='/users/**']
+2024-11-27 15:45:23 - Adding web access control expression [authenticated] for any request
+2024-11-27 15:45:23 - Validated configuration attributes
+2024-11-27 15:45:23 - Validated configuration attributes
+2024-11-27 15:45:23 - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@52d998c4, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@6bb769ae, org.springframework.security.web.context.SecurityContextPersistenceFilter@1cbda8fa, org.springframework.security.web.header.HeaderWriterFilter@72740d3d, org.springframework.security.web.authentication.logout.LogoutFilter@67eac464, org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter@47d31739, org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter@255d7fa5, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@7ae8dee8, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@15d75cad, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@22f443b9, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@65065046, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@c52620c, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@48616bdb, org.springframework.security.web.session.SessionManagementFilter@bc6c73d, org.springframework.security.web.access.ExceptionTranslationFilter@2689060f, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@3ba1753e]
+2024-11-27 15:45:23 - LiveReload server is running on port 35729
+2024-11-27 15:45:23 - Tomcat started on port(s): 8080 (http) with context path ''
+2024-11-27 15:45:23 - Started UserServiceApplication in 3.71 seconds (JVM running for 4.791)
+2024-11-27 15:51:25 - Closing JPA EntityManagerFactory for persistence unit 'default'
+2024-11-27 15:51:25 - HikariPool-1 - Shutdown initiated...
+2024-11-27 15:51:25 - HikariPool-1 - Shutdown completed.
+2024-11-27 15:52:03 - Starting UserServiceApplication using Java 11.0.24 on LAMHOBAN with PID 3212 (D:\infodation\back-end\userservice\target\classes started by Binh Diep in D:\infodation\back-end)
+2024-11-27 15:52:03 - No active profile set, falling back to 1 default profile: "default"
+2024-11-27 15:52:03 - Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2024-11-27 15:52:03 - For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2024-11-27 15:52:03 - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-11-27 15:52:03 - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2024-11-27 15:52:03 - Finished Spring Data repository scanning in 34 ms. Found 2 JPA repository interfaces.
+2024-11-27 15:52:03 - Multiple Spring Data modules found, entering strict repository configuration mode
+2024-11-27 15:52:03 - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2024-11-27 15:52:03 - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.infodation.userservice.repositories.NotificationRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-11-27 15:52:03 - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.infodation.userservice.repositories.UserRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2024-11-27 15:52:03 - Finished Spring Data repository scanning in 3 ms. Found 0 Redis repository interfaces.
+2024-11-27 15:52:04 - Tomcat initialized with port(s): 8080 (http)
+2024-11-27 15:52:04 - Starting service [Tomcat]
+2024-11-27 15:52:04 - Starting Servlet engine: [Apache Tomcat/9.0.64]
+2024-11-27 15:52:04 - Initializing Spring embedded WebApplicationContext
+2024-11-27 15:52:04 - Root WebApplicationContext: initialization completed in 1190 ms
+2024-11-27 15:52:04 - HHH000204: Processing PersistenceUnitInfo [name: default]
+2024-11-27 15:52:04 - HHH000412: Hibernate ORM core version 5.6.9.Final
+2024-11-27 15:52:04 - HikariPool-1 - Starting...
+2024-11-27 15:52:04 - HikariPool-1 - Start completed.
+2024-11-27 15:52:04 - HHH000400: Using dialect: org.hibernate.dialect.MySQL8Dialect
+2024-11-27 15:52:05 - HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2024-11-27 15:52:05 - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2024-11-27 15:52:05 - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2024-11-27 15:52:05 - Eagerly initializing {org.springframework.boot.autoconfigure.security.servlet.SpringBootWebSecurityConfiguration$WebSecurityEnablerConfiguration=org.springframework.boot.autoconfigure.security.servlet.SpringBootWebSecurityConfiguration$WebSecurityEnablerConfiguration@24cc8aed}
+2024-11-27 15:52:05 - No authenticationProviders and no parentAuthenticationManager defined. Returning null.
+2024-11-27 15:52:05 - Adding web access control expression [permitAll] for Ant [pattern='/hello']
+2024-11-27 15:52:05 - Adding web access control expression [permitAll] for Ant [pattern='/users/**']
+2024-11-27 15:52:05 - Adding web access control expression [authenticated] for any request
+2024-11-27 15:52:05 - Validated configuration attributes
+2024-11-27 15:52:05 - Validated configuration attributes
+2024-11-27 15:52:05 - Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@11351427, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@66f9b530, org.springframework.security.web.context.SecurityContextPersistenceFilter@596ccf3c, org.springframework.security.web.header.HeaderWriterFilter@53554ec0, org.springframework.security.web.authentication.logout.LogoutFilter@79d643e, org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestRedirectFilter@114b1027, org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter@4075b847, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@9f64246, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@3961892a, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@3ee6f5d0, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@287739ab, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@31af0065, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@6b4d0a88, org.springframework.security.web.session.SessionManagementFilter@13fa3ced, org.springframework.security.web.access.ExceptionTranslationFilter@1ca4bdf, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@4c580c2c]
+2024-11-27 15:52:05 - LiveReload server is running on port 35729
+2024-11-27 15:52:06 - Tomcat started on port(s): 8080 (http) with context path ''
+2024-11-27 15:52:06 - Started UserServiceApplication in 3.483 seconds (JVM running for 4.214)
