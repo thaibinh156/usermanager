@@ -58,5 +58,4 @@ public class TaskStatus {
         this.createdAt = createdAt;
     }
 
-    // Getters and setters
 }
