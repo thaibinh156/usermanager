@@ -44,31 +44,37 @@ public class UserServiceImpl implements IUserService {
         this.userRepository = userRepository;
         this.restTemplate = restTemplate;
     }
+    @Value("${task.service.url}")
+    private String taskServiceUrl;
 
     @Override
     public TaskUserResponseDTO getUserWithTasks(String userId) {
-        // Find the user in the database based on user_id
-        User user = userRepository.findByUserId(userId).orElse(null);
-        checkUser(userId);
-        // Use UserMapper to convert User to UserDTO
-        UserDTO userDTO = UserMapper.INSTANCE.userToUserDTO(user);
+        try {
+            // Find the user in the database based on user_id
+            User user = userRepository.findByUserId(userId).orElse(null);
+            checkUser(userId);
+            // Use UserMapper to convert User to UserDTO
+            UserDTO userDTO = UserMapper.INSTANCE.userToUserDTO(user);
 
-        ResponseEntity<List<TaskDTO>> taskResponse = restTemplate.exchange(
-                "http://localhost:8081/api/tasks/user/" + user.getId(),
-                HttpMethod.GET,
-                null,
-                new ParameterizedTypeReference<List<TaskDTO>>() {
-                }
-        );
+            ResponseEntity<List<TaskDTO>> taskResponse = restTemplate.exchange(
+                    taskServiceUrl + "/api/tasks/user/" + user.getId(),
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<TaskDTO>>() {}
+            );
+            List<TaskDTO> tasks = taskResponse.getBody();
 
-        List<TaskDTO> tasks = taskResponse.getBody();
+            // Create TaskUserResponseDTO and return it
+            TaskUserResponseDTO taskUserResponse = new TaskUserResponseDTO();
+            taskUserResponse.setUser(userDTO);
+            taskUserResponse.setTasks(tasks); // Set the list of tasks from taskResponse
 
-        // Create TaskUserResponseDTO and return it
-        TaskUserResponseDTO taskUserResponse = new TaskUserResponseDTO();
-        taskUserResponse.setUser(userDTO);
-        taskUserResponse.setTasks(tasks); // Set the list of tasks from taskResponse
+            return taskUserResponse;
 
-        return taskUserResponse;
+        } catch (Exception e) {
+            logger.error("Error while getting user tasks for userId: " + userId, e);
+            throw new IllegalArgumentException("Error while retrieving user tasks", e);
+        }
     }
 
     @Value("${user.batch.size}") //value is injected from the application.properties file
