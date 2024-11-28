@@ -1,7 +1,7 @@
 package com.infodation.task_service.controllers;
 
 import com.infodation.task_service.models.TaskProjection;
-import com.infodation.task_service.services.ITaskService;
+import com.infodation.task_service.services.iServices.ITaskService;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
