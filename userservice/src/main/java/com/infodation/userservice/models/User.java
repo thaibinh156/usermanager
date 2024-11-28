@@ -48,6 +48,12 @@ public class User implements Serializable {
 
     @Column(name="updated_at")
     private LocalDateTime updatedAt;
+
+    @Column(nullable = false, unique = true)
+    private String username;
+    @Column(nullable = false)
+    private String password;
+
     public User(Long id, String email, Sex sex, String lastName, String userId, String firstName, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.id = id;
         this.email = email;
@@ -124,5 +130,21 @@ public class User implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
