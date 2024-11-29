@@ -6,10 +6,10 @@ import com.infodation.userservice.config.users.LoginRequest;
 import com.infodation.userservice.config.users.LoginResponse;
 import com.infodation.userservice.utils.ApiResponse;
 import com.infodation.userservice.utils.ApiResponseUtil;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.FieldError;
@@ -37,22 +37,46 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<ApiResponse<?>> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+        LoginResponse loginResponse = null;
+        String message;
+        HttpStatus status;
+        String error = null;
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getUsername(),
-                        loginRequest.getPassword()
-                )
-        );
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            loginRequest.getUsername(),
+                            loginRequest.getPassword()
+                    )
+            );
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        String jwt = tokenProvider.generateToken((CustomUserDetails) authentication.getPrincipal());
-        return new ResponseEntity<>(ApiResponseUtil.buildApiResponse(new LoginResponse(jwt), HttpStatus.OK, "Login Successfully", null), HttpStatus.OK);
+            String jwt = tokenProvider.generateToken((CustomUserDetails) authentication.getPrincipal());
+            loginResponse = new LoginResponse(jwt);
+            status = HttpStatus.OK;
+            message = "Login Successfully";
+
+        } catch (Exception ex) {
+            message = "Invalid username or password"; // Default error message
+            if (ex instanceof BadCredentialsException) {
+                message = "Incorrect username or password";
+            } else if (ex instanceof DisabledException) {
+                message = "Account is disabled";
+            }
+
+            status = HttpStatus.UNAUTHORIZED;
+            error = ex.getMessage();
+        }
+
+        ApiResponse<?> response = ApiResponseUtil.buildApiResponse(loginResponse, status, message, error);
+
+        return new ResponseEntity<>(response, status);
     }
 
+
     @GetMapping("/validate")
-    public ResponseEntity<ApiResponse<?>> accessToken(@RequestHeader("Authorization") String authHeader) {
+    public ResponseEntity<ApiResponse<?>> accessToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
         String message;
         HttpStatus status;
 

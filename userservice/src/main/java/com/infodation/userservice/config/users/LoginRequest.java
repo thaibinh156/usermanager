@@ -10,7 +10,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class LoginRequest {
     @NotBlank(message = "username is blank")
-    @JsonAlias("user_name")
+    @JsonAlias("username")
     private String username;
     @NotBlank(message = "password is blank")
     @JsonAlias("password")
