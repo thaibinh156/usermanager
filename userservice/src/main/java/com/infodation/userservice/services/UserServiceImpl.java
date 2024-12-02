@@ -44,8 +44,8 @@ public class UserServiceImpl implements IUserService {
         this.userRepository = userRepository;
         this.restTemplate = restTemplate;
     }
-    @Value("${task.service.url}")
-    private String taskServiceUrl;
+    @Value("${task.service.baseUrl}")
+    private String taskServiceBaseUrl;
 
     @Override
     public TaskUserResponseDTO getUserWithTasks(String userId) {
@@ -57,7 +57,7 @@ public class UserServiceImpl implements IUserService {
             UserDTO userDTO = UserMapper.INSTANCE.userToUserDTO(user);
 
             ResponseEntity<List<TaskDTO>> taskResponse = restTemplate.exchange(
-                    taskServiceUrl + "/api/tasks/user/" + user.getId(),
+                    taskServiceBaseUrl + "/api/tasks/user/" + user.getId(),
                     HttpMethod.GET,
                     null,
                     new ParameterizedTypeReference<List<TaskDTO>>() {}
