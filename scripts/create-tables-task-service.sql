@@ -1,4 +1,4 @@
-use mydb
+use mydb;
 
 CREATE TABLE tasks (
 	id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -10,7 +10,7 @@ CREATE TABLE tasks (
 	priority VARCHAR(50),
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-)
+);
 
 CREATE TABLE categories (
 	id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -18,7 +18,7 @@ CREATE TABLE categories (
 	description TEXT,
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	UNIQUE(name)
-)
+);
 
 CREATE TABLE statuses (
 	id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -26,7 +26,7 @@ CREATE TABLE statuses (
 	description TEXT,
 	created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	UNIQUE(name)
-)
+);
 
 
 CREATE TABLE assignments (
@@ -34,7 +34,7 @@ CREATE TABLE assignments (
 	user_id BIGINT NOT NULL,
 	task_id BIGINT NOT NULL,
 	assigned_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-)
+);
 
 
 ALTER TABLE tasks

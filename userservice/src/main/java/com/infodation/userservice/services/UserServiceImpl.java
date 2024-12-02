@@ -1,6 +1,8 @@
 package com.infodation.userservice.services;
 
 import com.infodation.userservice.mapper.UserMapper;
+import com.infodation.userservice.models.TaskDTO.TaskDTO;
+import com.infodation.userservice.models.TaskDTO.TaskUserResponseDTO;
 import com.infodation.userservice.models.User;
 import com.infodation.userservice.models.UserDTO;
 import com.infodation.userservice.models.dto.user.CreateUserDTO;
@@ -13,10 +15,14 @@ import com.opencsv.exceptions.CsvValidationException;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,11 +38,48 @@ import java.util.Optional;
 public class UserServiceImpl implements IUserService {
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserRepository userRepository;
-    public UserServiceImpl(UserRepository userRepository) {
+    private final RestTemplate restTemplate;
+
+    public UserServiceImpl(UserRepository userRepository, RestTemplate restTemplate) {
         this.userRepository = userRepository;
+        this.restTemplate = restTemplate;
     }
+    @Value("${task.service.baseUrl}")
+    private String taskServiceBaseUrl;
+
+    @Override
+    public TaskUserResponseDTO getUserWithTasks(String userId) {
+        try {
+            // Find the user in the database based on user_id
+            User user = userRepository.findByUserId(userId).orElse(null);
+            checkUser(userId);
+            // Use UserMapper to convert User to UserDTO
+            UserDTO userDTO = UserMapper.INSTANCE.userToUserDTO(user);
+
+            ResponseEntity<List<TaskDTO>> taskResponse = restTemplate.exchange(
+                    taskServiceBaseUrl + "/api/tasks/user/" + user.getId(),
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<TaskDTO>>() {}
+            );
+            List<TaskDTO> tasks = taskResponse.getBody();
+
+            // Create TaskUserResponseDTO and return it
+            TaskUserResponseDTO taskUserResponse = new TaskUserResponseDTO();
+            taskUserResponse.setUser(userDTO);
+            taskUserResponse.setTasks(tasks); // Set the list of tasks from taskResponse
+
+            return taskUserResponse;
+
+        } catch (Exception e) {
+            logger.error("Error while getting user tasks for userId: " + userId, e);
+            throw new IllegalArgumentException("Error while retrieving user tasks", e);
+        }
+    }
+
     @Value("${user.batch.size}") //value is injected from the application.properties file
     private int batchSize;
+
     @Async  // Annotation for asynchronous execution
     public CompletableFuture<Void> importUsersFromCsvAsync(MultipartFile file) throws IOException {
         logger.info("Starting CSV import process");
@@ -96,6 +139,7 @@ public class UserServiceImpl implements IUserService {
         logger.info("CSV import process completed.");
         return CompletableFuture.completedFuture(null);
     }
+
     @Async
     public CompletableFuture<Void> bulkEditUsersAsync(List<UpdateUserDTO> usersDTO) {
         logger.info("Bulk edit started for {} users", usersDTO.size());
@@ -106,10 +150,12 @@ public class UserServiceImpl implements IUserService {
                 UserMapper.INSTANCE.updateUserDTOToUser(userDTO, userToUpdate);
                 usersToUpdate.add(userToUpdate);
             }
-        } userRepository.saveAll(usersToUpdate);
+        }
+        userRepository.saveAll(usersToUpdate);
         logger.info("Bulk edit completed, updated {} users", usersToUpdate.size());
         return CompletableFuture.completedFuture(null);
     }
+
     @Override
     public Page<User> getAll(Pageable pageable, String name) {
         String query = Optional.ofNullable(name).orElse("");
@@ -147,4 +193,13 @@ public class UserServiceImpl implements IUserService {
     public void delete(String userId) {
         userRepository.deleteByUserId(userId);
     }
+
+    public void checkUser(String userId) {
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> {
+                    logger.info("User not found for user_id: " + userId);
+                    return new IllegalArgumentException("User not found for user_id: " + userId);
+                });
+    }
+
 }

@@ -1,5 +1,10 @@
 package com.infodation.task_service.services;
 
+import com.infodation.task_service.models.TaskProjection;
+import com.infodation.task_service.repositories.TaskServiceRepository;
+import org.springframework.stereotype.Service;
+import java.util.ArrayList;
+import java.util.List;
 import com.infodation.task_service.models.Priority;
 import com.infodation.task_service.models.Task;
 import com.infodation.task_service.models.TaskCategory;
@@ -15,7 +20,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.BufferedReader;
@@ -29,12 +33,26 @@ public class TaskServiceImpl implements ITaskService {
     private final TaskRepository taskRepository;
     private final ITaskCategoryService taskCategoryService;
     private final ITaskStatusService taskStatusService;
+    private  final TaskServiceRepository taskServiceRepository;
     private static final Logger log = LoggerFactory.getLogger(TaskServiceImpl.class);
 
-    public TaskServiceImpl(TaskRepository taskRepository, ITaskCategoryService taskCategoryService, ITaskStatusService taskStatusService) {
+    public TaskServiceImpl(TaskRepository taskRepository, ITaskCategoryService taskCategoryService, ITaskStatusService taskStatusService, TaskServiceRepository taskServiceRepository) {
         this.taskRepository = taskRepository;
         this.taskCategoryService = taskCategoryService;
         this.taskStatusService = taskStatusService;
+        this.taskServiceRepository = taskServiceRepository;
+    }
+
+    @Override
+    public List<TaskProjection> getTasksByUserId(Long userId) {
+        // Query TaskProjection objects from the repository
+        List<TaskProjection> tasks = taskServiceRepository.findTasksByUserId(userId);
+        // Check if no tasks are found
+        if (tasks.isEmpty()) {
+            return new ArrayList<>();
+        }
+        // Return the list of TaskProjection objects
+        return tasks;
     }
 
     @Override
