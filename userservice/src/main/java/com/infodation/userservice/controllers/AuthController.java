@@ -4,6 +4,7 @@ import com.infodation.userservice.components.JwtTokenProvider;
 import com.infodation.userservice.config.users.CustomUserDetails;
 import com.infodation.userservice.config.users.LoginRequest;
 import com.infodation.userservice.config.users.LoginResponse;
+import com.infodation.userservice.models.dto.ValidateResponse;
 import com.infodation.userservice.utils.ApiResponse;
 import com.infodation.userservice.utils.ApiResponseUtil;
 import org.springframework.http.HttpHeaders;
@@ -18,8 +19,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api")
@@ -74,12 +77,11 @@ public class AuthController {
         return new ResponseEntity<>(response, status);
     }
 
-
     @GetMapping("/validate")
     public ResponseEntity<ApiResponse<?>> accessToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String authHeader) {
         String message;
         HttpStatus status;
-
+        ValidateResponse data = null;
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             status = HttpStatus.UNAUTHORIZED;
             message = "Invalid Token";
@@ -91,13 +93,16 @@ public class AuthController {
             if (isValid) {
                 status = HttpStatus.OK;
                 message = "Valid Token";
+                data = new ValidateResponse();
+                data.setRoles(jwtTokenProvider.getRolesFromJWT(token));
+                data.setUserId(jwtTokenProvider.getUserIdFromJWT(token));
             } else {
                 status = HttpStatus.UNAUTHORIZED;
                 message = "Invalid Token";
             }
         }
 
-        ApiResponse<?> response = ApiResponseUtil.buildApiResponse(null, status, message, null);
+        ApiResponse<?> response = ApiResponseUtil.buildApiResponse(data, status, message, null);
 
         return new ResponseEntity<>(response,status);
     }

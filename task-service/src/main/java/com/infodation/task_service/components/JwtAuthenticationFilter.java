@@ -1,11 +1,15 @@
 package com.infodation.task_service.components;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.client.HttpClientErrorException;
@@ -17,18 +21,22 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final RestTemplate restTemplate;
-
+    private final ObjectMapper mapper;
     @Value("${auth.service.baseUrl}")
     private String authServiceUrl;
 
-    public JwtAuthenticationFilter(RestTemplate restTemplate) {
+    public JwtAuthenticationFilter(RestTemplate restTemplate, ObjectMapper mapper) {
         this.restTemplate = restTemplate;
+        this.mapper = mapper;
     }
 
     @Override
@@ -62,13 +70,28 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             );
 
             if (validationResponse.getStatusCode() == HttpStatus.OK) {
-                String userDetails = validationResponse.getBody();
+                String responseBody = validationResponse.getBody();
+                JsonNode jsonNode = mapper.readTree(responseBody);
 
-                Authentication authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, List.of());
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                filterChain.doFilter(request, response);
-                return;
+                String userId = jsonNode.get("data").get("userId").asText();
+                System.out.println(userId);
+                List<String> roles = new ArrayList<>();
+                JsonNode roleJson = jsonNode.get("data").get("roles");
+                roleJson.forEach(x -> {
+                    roles.add(x.get("name").asText());
+                });
+
+                if (roles.contains("ROLE_ADMIN") || roles.contains("ROLE_USER")) {
+                    Authentication authentication = new UsernamePasswordAuthenticationToken(
+                            userId, null, roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    filterChain.doFilter(request, response);
+                    return;
+                } else {
+                    status = HttpServletResponse.SC_FORBIDDEN;
+                    message = "User does not have the required role";
+                    throw new ServletException(message);
+                }
             }
 
         } catch (HttpClientErrorException.Forbidden e) {

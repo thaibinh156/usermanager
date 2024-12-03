@@ -18,7 +18,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "WHERE :name = '' OR u.firstName LIKE %:name% OR u.lastName LIKE %:name%")
     Page<User> findByName(@Param("name") String name, Pageable pageable);
 
-    @Query(value = "SELECT u.userId FROM User u", nativeQuery = true)
+    @Query(value = "SELECT u.userId FROM User u")
     Set<String> findAllUserIds();
 
     Optional<User> findByUserId(String userId);
@@ -26,4 +26,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     void deleteByUserId(String userId);
 
     User findByUsername(String username);
+    boolean existsUserByUsername(String username);
 }

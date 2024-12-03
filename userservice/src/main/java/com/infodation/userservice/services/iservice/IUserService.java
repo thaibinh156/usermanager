@@ -1,5 +1,6 @@
 package com.infodation.userservice.services.iservice;
 
+import com.infodation.userservice.models.Role;
 import com.infodation.userservice.models.User;
 import com.infodation.userservice.models.dto.user.CreateUserDTO;
 import com.infodation.userservice.models.dto.user.UpdateUserDTO;
@@ -9,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 public interface IUserService {
@@ -20,4 +22,5 @@ public interface IUserService {
     void delete(String userId);
     CompletableFuture<Void> bulkEditUsersAsync(List<UpdateUserDTO> usersDTO);
     CompletableFuture<Void> importUsersFromCsvAsync(MultipartFile file) throws IOException;
+    void createDefaultUsers();
 }

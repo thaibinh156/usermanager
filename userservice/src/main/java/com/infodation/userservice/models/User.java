@@ -1,12 +1,11 @@
 package com.infodation.userservice.models;
 
-
-
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -49,12 +48,28 @@ public class User implements Serializable {
     @Column(name="updated_at")
     private LocalDateTime updatedAt;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = true, name = "username")
     private String username;
-    @Column(nullable = false)
+    @Column(nullable = false, name = "password")
     private String password;
 
-    public User(Long id, String email, Sex sex, String lastName, String userId, String firstName, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    @ManyToMany
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
+
+    public User(Long id, String email, Sex sex, String lastName, String userId, String firstName, LocalDateTime createdAt, LocalDateTime updatedAt, String username, String password) {
         this.id = id;
         this.email = email;
         this.sex = sex;
@@ -63,6 +78,8 @@ public class User implements Serializable {
         this.firstName = firstName;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.username = username;
+        this.password = password;
     }
 
     public User() {

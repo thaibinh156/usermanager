@@ -2,7 +2,9 @@ package com.infodation.userservice.config;
 
 import com.infodation.userservice.config.users.JwtAuthenticationFilter;
 import com.infodation.userservice.config.users.UserService;
+import com.infodation.userservice.models.Role;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.BeanIds;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -48,14 +50,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .cors()
+                .headers()
+                    .httpStrictTransportSecurity()
+                    .disable()
                 .and()
+                .cors().and()
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/login", "/api/validate","/error").permitAll()
-                .anyRequest().authenticated();
-
-        http.addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                .antMatchers("/api/login", "/error", "/api/validate").permitAll()
+                .antMatchers("/api/users/**").hasRole(Role.ADMIN)
+                .antMatchers("/swagger-ui/**", "/swagger-resources/**", "/swagger-ui.html", "/api/v2/api-docs", "/webjars/**").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
+
 
 }

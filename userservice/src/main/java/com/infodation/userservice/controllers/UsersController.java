@@ -15,7 +15,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import com.infodation.userservice.utils.ApiResponseUtil;
 import org.springframework.web.multipart.MultipartFile;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.HashMap;
