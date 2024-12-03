@@ -2,6 +2,8 @@ package com.infodation.userservice.services;
 
 import com.infodation.userservice.mapper.UserMapper;
 import com.infodation.userservice.models.Role;
+import com.infodation.userservice.models.TaskDTO.TaskDTO;
+import com.infodation.userservice.models.TaskDTO.TaskUserResponseDTO;
 import com.infodation.userservice.models.User;
 import com.infodation.userservice.models.UserDTO;
 import com.infodation.userservice.models.dto.user.CreateUserDTO;
@@ -26,6 +28,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,10 +46,9 @@ public class UserServiceImpl implements IUserService {
     private final UserRepository userRepository;
     private final IRoleService roleService;
     private static PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-    public UserServiceImpl(UserRepository userRepository, IRoleService roleService) {
     private final RestTemplate restTemplate;
 
-    public UserServiceImpl(UserRepository userRepository, RestTemplate restTemplate) {
+    public UserServiceImpl(UserRepository userRepository, IRoleService roleService, RestTemplate restTemplate) {
         this.userRepository = userRepository;
         this.roleService = roleService;
         this.restTemplate = restTemplate;
