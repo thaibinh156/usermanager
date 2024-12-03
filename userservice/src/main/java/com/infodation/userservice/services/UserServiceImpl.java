@@ -15,8 +15,11 @@ import com.opencsv.exceptions.CsvValidationException;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -41,11 +44,49 @@ public class UserServiceImpl implements IUserService {
     private final IRoleService roleService;
     private static PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     public UserServiceImpl(UserRepository userRepository, IRoleService roleService) {
+    private final RestTemplate restTemplate;
+
+    public UserServiceImpl(UserRepository userRepository, RestTemplate restTemplate) {
         this.userRepository = userRepository;
         this.roleService = roleService;
+        this.restTemplate = restTemplate;
     }
+    @Value("${task.service.baseUrl}")
+    private String taskServiceBaseUrl;
+
+    @Override
+    public TaskUserResponseDTO getUserWithTasks(String userId) {
+        try {
+            // Find the user in the database based on user_id
+            User user = userRepository.findByUserId(userId).orElse(null);
+            checkUser(userId);
+            // Use UserMapper to convert User to UserDTO
+            UserDTO userDTO = UserMapper.INSTANCE.userToUserDTO(user);
+
+            ResponseEntity<List<TaskDTO>> taskResponse = restTemplate.exchange(
+                    taskServiceBaseUrl + "/api/tasks/user/" + user.getId(),
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<TaskDTO>>() {}
+            );
+            List<TaskDTO> tasks = taskResponse.getBody();
+
+            // Create TaskUserResponseDTO and return it
+            TaskUserResponseDTO taskUserResponse = new TaskUserResponseDTO();
+            taskUserResponse.setUser(userDTO);
+            taskUserResponse.setTasks(tasks); // Set the list of tasks from taskResponse
+
+            return taskUserResponse;
+
+        } catch (Exception e) {
+            logger.error("Error while getting user tasks for userId: " + userId, e);
+            throw new IllegalArgumentException("Error while retrieving user tasks", e);
+        }
+    }
+
     @Value("${user.batch.size}") //value is injected from the application.properties file
     private int batchSize;
+
     @Async  // Annotation for asynchronous execution
     public CompletableFuture<Void> importUsersFromCsvAsync(MultipartFile file) throws IOException {
         logger.info("Starting CSV import process");
@@ -121,10 +162,13 @@ public class UserServiceImpl implements IUserService {
                 UserMapper.INSTANCE.updateUserDTOToUser(userDTO, userToUpdate);
                 usersToUpdate.add(userToUpdate);
             }
-        } userRepository.saveAll(usersToUpdate);
+        }
+
+        userRepository.saveAll(usersToUpdate);
         logger.info("Bulk edit completed, updated {} users", usersToUpdate.size());
         return CompletableFuture.completedFuture(null);
     }
+
     @Override
     public Page<User> getAll(Pageable pageable, String name) {
         String query = Optional.ofNullable(name).orElse("");
@@ -133,7 +177,6 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     @Cacheable(value = "users", key = "#userId", unless = "#result == null")
-    @Transactional
     public User getByUserId(String userId) {
         return userRepository.findByUserId(userId).orElse(null);
     }
@@ -153,11 +196,12 @@ public class UserServiceImpl implements IUserService {
         if (userToUpdate == null) {
             return null;
         }
-
+        // Only update the necessary fields, keeping the userId and other fields from the existing entity
         UserMapper.INSTANCE.updateUserDTOToUser(user, userToUpdate);
 
         return userRepository.save(userToUpdate);
     }
+
 
     @Override
     @CacheEvict(value = "users", key = "#userId")
@@ -198,4 +242,13 @@ public class UserServiceImpl implements IUserService {
         roles.add(roleService.getRole(roleName));
         return roles;
     }
+
+    public void checkUser(String userId) {
+        User user = userRepository.findByUserId(userId)
+                .orElseThrow(() -> {
+                    logger.info("User not found for user_id: " + userId);
+                    return new IllegalArgumentException("User not found for user_id: " + userId);
+                });
+    }
+
 }

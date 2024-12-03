@@ -1,5 +1,6 @@
 package com.infodation.userservice.controllers;
 
+import com.infodation.userservice.models.TaskDTO.TaskUserResponseDTO;
 import com.infodation.userservice.models.User;
 import com.infodation.userservice.models.dto.user.CreateUserDTO;
 import com.infodation.userservice.models.dto.user.UpdateUserDTO;
@@ -14,6 +15,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import com.infodation.userservice.utils.ApiResponseUtil;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
@@ -32,8 +34,25 @@ public class UsersController {
 
     private final IUserService userService;
 
-    public UsersController(IUserService userService) {
+    public UsersController(IUserService userService, RestTemplate restTemplate) {
         this.userService = userService;
+        this.restTemplate = restTemplate;
+    }
+    private final RestTemplate restTemplate;
+    // API receives user_id and calls the task-service API to fetch the user's tasks
+    @GetMapping("/{userId}/tasks")
+    public ResponseEntity<TaskUserResponseDTO> getUserWithTasks(@PathVariable String userId) {
+        logger.info("Received request from userId: {}", userId);
+        // Call the service method to get User and tasks information
+        try {
+            TaskUserResponseDTO response = userService.getUserWithTasks(userId);
+            logger.info("Successfully retrieved tasks for user ID: {}", userId);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            // If the user is not found
+            logger.warn("User with ID: {} not found. Error: {}", userId, e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
     @PostMapping("/csv-migrate")
