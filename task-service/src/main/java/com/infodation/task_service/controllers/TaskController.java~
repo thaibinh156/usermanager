@@ -27,6 +27,7 @@ public class TaskController {
     public void sendNotificationToUser(TaskAssignmentDTO message) {
         rabbitTemplate.convertAndSend("sendNotification", message);
         logger.info("Messages sent: -----> " + message);
+
     }
     @PostMapping("/assign")
     public ResponseEntity<String> assignTaskToUser(@RequestBody TaskAssignmentDTO taskAssignmentDTO) {
