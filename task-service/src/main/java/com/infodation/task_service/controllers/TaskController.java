@@ -1,27 +1,48 @@
 package com.infodation.task_service.controllers;
 
 import com.infodation.task_service.models.TaskProjection;
+import com.infodation.task_service.models.dto.TaskAssignmentDTO;
 import com.infodation.task_service.services.iServices.ITaskService;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.web.bind.annotation.*;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import java.util.List;
 import org.slf4j.Logger;
 
 
 @RestController
-@RequestMapping("api/tasks")
+@RequestMapping("/api/tasks")
 public class TaskController {
     private static final Logger logger = LoggerFactory.getLogger(TaskController.class);
     private final ITaskService taskService;
+    private final RabbitTemplate rabbitTemplate;
 
-    public TaskController(ITaskService taskService) {
+    public TaskController(ITaskService taskService, RabbitTemplate rabbitTemplate) {
         this.taskService = taskService;
+        this.rabbitTemplate = rabbitTemplate;
+    }
+
+    public void sendNotificationToUser(TaskAssignmentDTO message) {
+        rabbitTemplate.convertAndSend("sendNotification", message);
+        logger.info("Messages sent: -----> " + message);
+
+    }
+    @PostMapping("/assign")
+    public ResponseEntity<String> assignTaskToUser(@RequestBody TaskAssignmentDTO taskAssignmentDTO) {
+        try {
+            logger.info("Assigning task {} to user {}", taskAssignmentDTO.getTaskId(), taskAssignmentDTO.getUserId());
+
+            // Save assignment to database
+            taskService.assignTaskToUser(taskAssignmentDTO);
+
+            sendNotificationToUser(taskAssignmentDTO);
+            return ResponseEntity.ok("Task assigned successfully.");
+        } catch (Exception e) {
+            logger.error("Error occurred while assigning task: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error occurred while assigning task.");
+        }
     }
 
     @GetMapping("/user/{userId}")

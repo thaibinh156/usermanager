@@ -5,12 +5,12 @@ import com.infodation.userservice.models.Notifications;
 import com.infodation.userservice.services.iservice.INotificationService;
 import com.infodation.userservice.utils.ApiResponse;
 import com.infodation.userservice.utils.ApiResponseUtil;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

@@ -1,5 +1,6 @@
 package com.infodation.userservice.controllers;
 
+import com.infodation.userservice.models.TaskDTO.TaskAssignmentDTO;
 import com.infodation.userservice.models.TaskDTO.TaskUserResponseDTO;
 import com.infodation.userservice.models.User;
 import com.infodation.userservice.models.dto.user.CreateUserDTO;
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import com.infodation.userservice.utils.ApiResponseUtil;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.springframework.web.bind.annotation.RequestBody;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -37,8 +38,21 @@ public class UsersController {
     public UsersController(IUserService userService, RestTemplate restTemplate) {
         this.userService = userService;
         this.restTemplate = restTemplate;
+
     }
     private final RestTemplate restTemplate;
+    @PostMapping("/{userId}/task-assign")
+    public ResponseEntity<TaskAssignmentDTO> assignTask(@Valid @RequestBody TaskAssignmentDTO taskAssignmentDTO) {
+        logger.info("Received request to assign task for user with ID: {}", taskAssignmentDTO.getUserId());
+        try {
+            TaskAssignmentDTO response = userService.createTaskAssignment(taskAssignmentDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
+        } catch (Exception e) {
+            logger.warn("Error while processing task assignment for user: {}", taskAssignmentDTO.getUserId(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
     // API receives user_id and calls the task-service API to fetch the user's tasks
     @GetMapping("/{userId}/tasks")
     public ResponseEntity<TaskUserResponseDTO> getUserWithTasks(@PathVariable String userId) {

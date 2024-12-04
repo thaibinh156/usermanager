@@ -1,14 +1,13 @@
 package com.infodation.task_service.services;
 
-import com.infodation.task_service.models.TaskProjection;
+import com.infodation.task_service.models.*;
+import com.infodation.task_service.models.dto.TaskAssignmentDTO;
+import com.infodation.task_service.repositories.TaskAssignmentRepository;
 import com.infodation.task_service.repositories.TaskServiceRepository;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
-import com.infodation.task_service.models.Priority;
-import com.infodation.task_service.models.Task;
-import com.infodation.task_service.models.TaskCategory;
-import com.infodation.task_service.models.TaskStatus;
 import com.infodation.task_service.repositories.TaskRepository;
 import com.infodation.task_service.services.iServices.ITaskCategoryService;
 import com.infodation.task_service.services.iServices.ITaskService;
@@ -29,18 +28,33 @@ import java.util.*;
 
 @Service
 public class TaskServiceImpl implements ITaskService {
-
     private final TaskRepository taskRepository;
     private final ITaskCategoryService taskCategoryService;
     private final ITaskStatusService taskStatusService;
     private  final TaskServiceRepository taskServiceRepository;
+    private final TaskAssignmentRepository taskAssignmentRepository;
     private static final Logger log = LoggerFactory.getLogger(TaskServiceImpl.class);
 
-    public TaskServiceImpl(TaskRepository taskRepository, ITaskCategoryService taskCategoryService, ITaskStatusService taskStatusService, TaskServiceRepository taskServiceRepository) {
+    public TaskServiceImpl(TaskRepository taskRepository, ITaskCategoryService taskCategoryService, ITaskStatusService taskStatusService, TaskServiceRepository taskServiceRepository, TaskAssignmentRepository taskAssignmentRepository) {
         this.taskRepository = taskRepository;
         this.taskCategoryService = taskCategoryService;
         this.taskStatusService = taskStatusService;
         this.taskServiceRepository = taskServiceRepository;
+        this.taskAssignmentRepository = taskAssignmentRepository;
+    }
+
+    public void assignTaskToUser(TaskAssignmentDTO taskAssignmentDTO) {
+        try {
+            Task task = taskRepository.findById(taskAssignmentDTO.getTaskId())
+                    .orElseThrow(() -> new IllegalArgumentException("Task not found with ID: " + taskAssignmentDTO.getTaskId()));
+            UserTaskAssignment assignment = new UserTaskAssignment();
+            assignment.setUserId(taskAssignmentDTO.getUserId());
+            assignment.setTask(task);
+            taskAssignmentRepository.save(assignment);
+        } catch (Exception e) {
+            log.error("Error occurred while assigning task: ", e);
+            throw new RuntimeException("Error occurred while assigning task", e);
+        }
     }
 
     @Override

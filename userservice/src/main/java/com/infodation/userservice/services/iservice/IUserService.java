@@ -1,5 +1,6 @@
 package com.infodation.userservice.services.iservice;
 
+import com.infodation.userservice.models.TaskDTO.TaskAssignmentDTO;
 import com.infodation.userservice.models.TaskDTO.TaskUserResponseDTO;
 import com.infodation.userservice.models.User;
 import com.infodation.userservice.models.dto.user.CreateUserDTO;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public interface IUserService {
+    TaskAssignmentDTO createTaskAssignment(TaskAssignmentDTO taskAssignmentDTO);
     TaskUserResponseDTO getUserWithTasks(String userId);
     Page<User> getAll(Pageable pageable, String name);
     User getByUserId(String userId);
