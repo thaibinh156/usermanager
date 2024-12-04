@@ -1,0 +1,71 @@
+version: '3.8'
+
+services:
+
+    mysql:
+        image: mysql:8.0
+        container_name: mysql_container
+        restart: always
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: mydb
+        ports:
+            - '3306:3306'
+        volumes:
+            - D:/mysql_data:/var/lib/mysql
+
+    redis:
+        image: redis:6.0
+        container_name: redis_container
+        restart: always
+        ports:
+            - "6379:6379"
+        volumes:
+            - redis_data:/data
+
+    user-service:
+        container_name: user-service-container
+        build:
+            context: userservice
+            dockerfile: Dockerfile
+        image: user-service:lastest
+        ports:
+            - 8080:8080
+        environment:
+            - GITHUB_CLIENT_ID=Ov23li2pKP5utI1fLPCp
+            - GITHUB_CLIENT_SECRET=6978a2dd954b42df1f8704a5b5da5e468b31f385
+            - SPRING_PROFILES_ACTIVE=prod
+            - DB_URL=jdbc:mysql://mysql:3306/mydb?allowPublicKeyRetrieval=true&useSSL=false
+            - DB_USERNAME=root
+            - DB_PASSWORD=root
+            - SERVER_PORT=8080
+            - TASK_SERVICE_BASE_URL=http://task-service-container:8081
+            - HOST=127.0.3.1
+        depends_on:
+            - mysql
+
+    task-service:
+        container_name: task-service-container
+        build:
+            context: task-service
+            dockerfile: Dockerfile
+        image: task-service:latest
+        ports:
+            - 8081:8081
+        environment:
+            - GITHUB_CLIENT_ID=Ov23liNmU8Yo9zlLGytk
+            - GITHUB_CLIENT_SECRET=79dbd20b2b90a1ee3d538559354f58d63bb37c0f
+            - SPRING_PROFILES_ACTIVE=prod
+            - DB_URL=jdbc:mysql://mysql:3306/mydb?allowPublicKeyRetrieval=true&useSSL=false
+            - DB_USERNAME=root
+            - DB_PASSWORD=root
+            - SERVER_PORT=8081
+            - AUTH_BASE_URL=http://user-service-container:8080
+            - HOST=127.0.3.1
+
+        depends_on:
+            - mysql
+
+volumes:
+    mysql_data:
+    redis_data:
