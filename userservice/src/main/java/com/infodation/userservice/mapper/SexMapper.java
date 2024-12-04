@@ -11,4 +11,10 @@ public interface SexMapper {
     default Sex mapSexToEnum(String sex) {
         return Sex.valueOf(sex.toUpperCase()); // Convert String to Enum by converting the input to uppercase
     }
+
+    @Named("sexToString")
+    default String mapSexToString(Sex sex) {
+        return sex != null ? sex.name() : null; // Convert enum to String
+    }
+
 }
