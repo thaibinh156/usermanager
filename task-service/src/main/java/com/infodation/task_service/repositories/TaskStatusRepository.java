@@ -9,5 +9,7 @@ import java.util.Set;
 public interface TaskStatusRepository extends JpaRepository<TaskStatus, Long> {
 
     @Query("SELECT s.name FROM TaskStatus s")
-    public Set<String> getAllTaskStatusName();
+    Set<String> getAllTaskStatusName();
+
+    boolean existsByName(String name);
 }
