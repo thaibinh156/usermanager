@@ -1,7 +1,7 @@
 use mydb;
 
 CREATE TABLE users (
-    id char(36) PRIMARY KEY,
+    id BIGINT PRIMARY KEY,
     user_id VARCHAR(255) NOT NULL,
     first_name VARCHAR(255) NOT NULL,
     last_name VARCHAR(255) NOT NULL,
