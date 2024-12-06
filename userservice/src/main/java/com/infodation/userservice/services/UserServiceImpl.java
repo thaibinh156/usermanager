@@ -1,6 +1,7 @@
 package com.infodation.userservice.services;
 
 import com.infodation.userservice.mapper.UserMapper;
+import com.infodation.userservice.models.Role;
 import com.infodation.userservice.models.TaskDTO.TaskDTO;
 import com.infodation.userservice.models.TaskDTO.TaskUserResponseDTO;
 import com.infodation.userservice.models.User;
@@ -8,6 +9,7 @@ import com.infodation.userservice.models.UserDTO;
 import com.infodation.userservice.models.dto.user.CreateUserDTO;
 import com.infodation.userservice.models.dto.user.UpdateUserDTO;
 import com.infodation.userservice.repositories.UserRepository;
+import com.infodation.userservice.services.iservice.IRoleService;
 import com.infodation.userservice.services.iservice.IUserService;
 import com.opencsv.CSVReader;
 import java.util.ArrayList;
@@ -21,7 +23,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedReader;
@@ -38,10 +44,13 @@ import java.util.Optional;
 public class UserServiceImpl implements IUserService {
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
     private final UserRepository userRepository;
+    private final IRoleService roleService;
+    private static PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final RestTemplate restTemplate;
 
-    public UserServiceImpl(UserRepository userRepository, RestTemplate restTemplate) {
+    public UserServiceImpl(UserRepository userRepository, IRoleService roleService, RestTemplate restTemplate) {
         this.userRepository = userRepository;
+        this.roleService = roleService;
         this.restTemplate = restTemplate;
     }
     @Value("${task.service.baseUrl}")
@@ -92,6 +101,8 @@ public class UserServiceImpl implements IUserService {
             String[] nextLine;
             boolean isHeader = true;
 
+            Set<Role> roles = new HashSet<>();
+            roles.add(roleService.getRole(Role.USER));
             while ((nextLine = reader.readNext()) != null) {
                 if (isHeader) {  // Skip the header row
                     isHeader = false;
@@ -112,8 +123,11 @@ public class UserServiceImpl implements IUserService {
                             nextLine[4], // sex
                             nextLine[5]  // email
                     );
-
                     User user = UserMapper.INSTANCE.userDTOToUser(userDTO);
+
+                    String username = userId+1;
+                    user.setPassword(passwordEncoder.encode(username));
+                    user.setUsername(username);
                     usersToSave.add(user);
 
                     // Save users when the list size reaches the batch size defined in application.properties
@@ -151,6 +165,7 @@ public class UserServiceImpl implements IUserService {
                 usersToUpdate.add(userToUpdate);
             }
         }
+
         userRepository.saveAll(usersToUpdate);
         logger.info("Bulk edit completed, updated {} users", usersToUpdate.size());
         return CompletableFuture.completedFuture(null);
@@ -163,7 +178,7 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    @Cacheable(value = "users", key = "#userId")
+    @Cacheable(value = "users", key = "#userId", unless = "#result == null")
     public User getByUserId(String userId) {
         return userRepository.findByUserId(userId).orElse(null);
     }
@@ -171,6 +186,8 @@ public class UserServiceImpl implements IUserService {
     @Override
     public User save(CreateUserDTO userDTO) {
         User newUser = UserMapper.INSTANCE.createUserDTOToUser(userDTO);
+        newUser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        newUser.setRoles(getRole("ROLE_"+Role.USER));
         return userRepository.save(newUser);
     }
 
@@ -192,6 +209,40 @@ public class UserServiceImpl implements IUserService {
     @CacheEvict(value = "users", key = "#userId")
     public void delete(String userId) {
         userRepository.deleteByUserId(userId);
+    }
+
+    @Override
+    public void createDefaultUsers() {
+        if (userRepository.existsUserByUsername("admin"))
+            logger.error("User 'admin' already exists.");
+        else {
+            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+            User user = new User();
+            user.setUsername("admin");
+            user.setPassword(passwordEncoder.encode("admin"));
+            user.setEmail("binhdiep15963@gmail.com");
+            user.setUserId("12312314");
+            user.setFirstName("binh");
+            user.setLastName("diep");
+
+            Set<Role> roles = new HashSet<>();
+            roles.add(roleService.getRole("ROLE_ADMIN"));
+
+            user.setRoles(roles);
+
+            try {
+                userRepository.save(user);
+            } catch (Exception e) {
+                logger.error(e.getMessage());
+            }
+        }
+
+    }
+    private Set<Role> getRole(String roleName){
+        Set<Role> roles = new HashSet<>();
+        roles.add(roleService.getRole(roleName));
+        return roles;
     }
 
     public void checkUser(String userId) {
