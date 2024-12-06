@@ -2,6 +2,7 @@ package com.infodation.userservice.services;
 
 import com.infodation.userservice.mapper.UserMapper;
 import com.infodation.userservice.models.Role;
+import com.infodation.userservice.models.TaskDTO.TaskAssignmentDTO;
 import com.infodation.userservice.models.TaskDTO.TaskDTO;
 import com.infodation.userservice.models.TaskDTO.TaskUserResponseDTO;
 import com.infodation.userservice.models.User;
@@ -29,6 +30,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedReader;
