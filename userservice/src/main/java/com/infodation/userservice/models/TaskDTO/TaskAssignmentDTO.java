@@ -10,8 +10,6 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TaskAssignmentDTO {
-    @Valid
-
     @JsonAlias("userId")
     @NotBlank
     @NotNull
