@@ -11,5 +11,5 @@ public interface TaskCategoryRepository extends JpaRepository<TaskCategory, Long
     @Query("SELECT c.name FROM TaskCategory c")
     Set<String> getAllCategoryName();
 
-    boolean existsByName(String name)
+    boolean existsByName(String name);
 }

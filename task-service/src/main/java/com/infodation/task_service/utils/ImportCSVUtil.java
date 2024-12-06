@@ -14,7 +14,7 @@ import java.util.List;
 public class ImportCSVUtil<T> {
     private static final Logger log = LoggerFactory.getLogger(ImportCSVUtil.class);
 
-    public void readAndSaveCSV(JpaRepository repository, MultipartFile file, Mapper<T> mapper) throws Exception {
+    public void readAndSaveCSV(JpaRepository<T,?> repository, MultipartFile file, Mapper<T> mapper) throws Exception {
         List<T> entities = new ArrayList<>();
 
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream()));

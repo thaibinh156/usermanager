@@ -1,7 +1,9 @@
 package com.infodation.task_service.services;
 
+import com.infodation.task_service.components.BadRequestException;
 import com.infodation.task_service.models.TaskProjection;
 import com.infodation.task_service.repositories.TaskServiceRepository;
+import com.infodation.task_service.utils.ImportCSVUtil;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
@@ -13,19 +15,14 @@ import com.infodation.task_service.repositories.TaskRepository;
 import com.infodation.task_service.services.iServices.ITaskCategoryService;
 import com.infodation.task_service.services.iServices.ITaskService;
 import com.infodation.task_service.services.iServices.ITaskStatusService;
-import com.infodation.task_service.utils.ApiResponse;
-import com.infodation.task_service.utils.ApiResponseUtil;
-import com.opencsv.CSVReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 public class TaskServiceImpl implements ITaskService {
@@ -35,6 +32,9 @@ public class TaskServiceImpl implements ITaskService {
     private final ITaskStatusService taskStatusService;
     private  final TaskServiceRepository taskServiceRepository;
     private static final Logger log = LoggerFactory.getLogger(TaskServiceImpl.class);
+
+    SimpleDateFormat dueDateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
     final int TITLE_ROW_INDEX = 1;
     final int DESCRIPTION_ROW_INDEX = 2;
@@ -66,82 +66,54 @@ public class TaskServiceImpl implements ITaskService {
 
     @Override
     @Async
-    public ApiResponse<?> importTaskFromCSVFile(MultipartFile file) throws Exception {
-        List<Task> tasks = new ArrayList<>();
-        String message;
-        HttpStatus status;
+    public CompletableFuture<Void> importTaskFromCSVFile(MultipartFile file) throws Exception {
+        ImportCSVUtil<Task> importCSVUtil = new ImportCSVUtil<>();
+        importCSVUtil.readAndSaveCSV(taskRepository, file, this::mapRowToTask);
 
-        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream()));
-             CSVReader csvReader = new CSVReader(bufferedReader)) {
-
-            List<String[]> rows = csvReader.readAll();
-            SimpleDateFormat dueDateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-            SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-
-            for (int i = 1; i < rows.size(); i++) {
-                String[] row = rows.get(i);
-                Optional<TaskCategory> category = Optional.empty();
-                Optional<TaskStatus> taskStatus = Optional.empty();
-
-                if (!row[CATEGORY_ROW_INDEX].isEmpty())
-                    category = taskCategoryService.getCategoryById((long) Double.parseDouble(row[CATEGORY_ROW_INDEX]));
-                if (!row[STATUS_ROW_INDEX].isEmpty())
-                    taskStatus = taskStatusService.getStatusById(Long.parseLong(row[STATUS_ROW_INDEX]));
-
-                if (taskStatus.isEmpty()) {
-                    message = "Status not found at row " + i;
-                    status = HttpStatus.NOT_FOUND;
-                    log.error(message);
-                    return ApiResponseUtil.buildApiResponse(null, status, message, null);
-                }
-
-                Task newTask = new Task();
-
-                newTask.setTitle(row[TITLE_ROW_INDEX]);
-                newTask.setDescription(row[DESCRIPTION_ROW_INDEX]);
-
-                newTask.setCategory(category.isEmpty() ? null : category.get());
-                newTask.setStatus(taskStatus.get());
-
-
-                Date dueDate = row[DUE_DATE_ROW_INDEX].isEmpty()? null: dueDateFormatter.parse(row[5]);
-                newTask.setDueDate(dueDate);
-
-                newTask.setPriority(Priority.valueOf(row[PRIORITY_ROW_INDEX].toUpperCase()));
-
-                Date createAt = dateFormatter.parse(row[CREATED_AT_ROW_INDEX].substring(0, 23));
-                newTask.setCreatedAt(createAt);
-                Date updateAt = dateFormatter.parse(row[UPDATED_AT_ROW_INDEX].substring(0, 23));
-                newTask.setCreatedAt(updateAt);
-                tasks.add(newTask);
-            }
-            log.info("Finished reading file. Total valid lines: {}", rows.size());
-
-            taskRepository.saveAll(tasks);
-            status = HttpStatus.OK;
-            message = String.format("Import file '%s' successfully", file.getOriginalFilename());
-            log.info(message);
-
-        } catch (Exception ex) {
-            log.error(ex.getMessage());
-            throw new Exception(ex.getMessage());
-        }
-
-        return ApiResponseUtil.buildApiResponse(null, status, message, null);
+        return CompletableFuture.allOf();
     }
 
-    private Task rowToTask(String[] row) throws Exception {
+    protected Task mapRowToTask(String[] row) throws Exception {
         Optional<TaskCategory> category = Optional.empty();
-        Optional<TaskStatus> taskStatus = Optional.empty();
+        Optional<TaskStatus> taskStatus;
+
+        long statusId;
 
         if (!row[CATEGORY_ROW_INDEX].isEmpty())
             category = taskCategoryService.getCategoryById((long) Double.parseDouble(row[CATEGORY_ROW_INDEX]));
-        if (!row[STATUS_ROW_INDEX].isEmpty())
-            taskStatus = taskStatusService.getStatusById(Long.parseLong(row[STATUS_ROW_INDEX]));
+        if (!row[STATUS_ROW_INDEX].isEmpty()) {
+            statusId = Long.parseLong(row[STATUS_ROW_INDEX]);
+            taskStatus = taskStatusService.getStatusById(statusId);
+        } else {
+            log.error("StatusId is empty");
+            throw new BadRequestException("StatusId is empty");
+        }
 
         if (taskStatus.isEmpty()) {
-            throw new
+            log.error("Status Id {} is not exist", statusId);
+            throw new BadRequestException("Status Id " +  statusId + " is not exist");
         }
+
+        Task newTask = new Task();
+
+        newTask.setTitle(row[TITLE_ROW_INDEX]);
+        newTask.setDescription(row[DESCRIPTION_ROW_INDEX]);
+
+        newTask.setCategory(category.orElse(null));
+        newTask.setStatus(taskStatus.get());
+
+
+        Date dueDate = row[DUE_DATE_ROW_INDEX].isEmpty()? null: dueDateFormatter.parse(row[DUE_DATE_ROW_INDEX]);
+        newTask.setDueDate(dueDate);
+
+        newTask.setPriority(Priority.valueOf(row[PRIORITY_ROW_INDEX].toUpperCase()));
+
+        Date createAt = dateFormatter.parse(row[CREATED_AT_ROW_INDEX].substring(0, 23));
+        newTask.setCreatedAt(createAt);
+        Date updateAt = dateFormatter.parse(row[UPDATED_AT_ROW_INDEX].substring(0, 23));
+        newTask.setUpdatedAt(updateAt);
+
+        return newTask;
     }
 }
 

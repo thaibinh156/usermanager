@@ -1,6 +1,7 @@
 package com.infodation.task_service.components;
 
 import com.infodation.task_service.utils.ApiResponse;
+import com.infodation.task_service.utils.ApiResponseUtil;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -60,5 +61,11 @@ public class GlobalExceptionHandler {
                 .build();
 
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiResponse<String>> handleBadRequestException(BadRequestException ex) {
+        ApiResponse<String> response = ApiResponseUtil.buildApiResponse(null, HttpStatus.BAD_REQUEST, ex.getMessage(), null);
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }
