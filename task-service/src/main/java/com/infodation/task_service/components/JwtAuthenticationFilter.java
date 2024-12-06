@@ -34,6 +34,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Value("${auth.service.baseUrl}")
     private String authServiceUrl;
 
+    final String BEAR_TOKEN_PREFIX = "Bearer ";
+
     public JwtAuthenticationFilter(RestTemplate restTemplate, ObjectMapper mapper) {
         this.restTemplate = restTemplate;
         this.mapper = mapper;
@@ -51,7 +53,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         int status = HttpServletResponse.SC_OK;
         try {
             String jwt = request.getHeader(HttpHeaders.AUTHORIZATION);
-            if (jwt == null || !jwt.startsWith("Bearer ")) {
+
+            if (jwt == null || !jwt.startsWith(BEAR_TOKEN_PREFIX)) {
                 status = HttpServletResponse.SC_UNAUTHORIZED;
                 message = "Missing or invalid Authorization header";
                 throw new ServletException(message);
@@ -74,9 +77,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 JsonNode jsonNode = mapper.readTree(responseBody);
 
                 String userId = jsonNode.get("data").get("userId").asText();
-                System.out.println(userId);
                 List<String> roles = new ArrayList<>();
                 JsonNode roleJson = jsonNode.get("data").get("roles");
+
                 roleJson.forEach(x -> {
                     roles.add(x.get("name").asText());
                 });
