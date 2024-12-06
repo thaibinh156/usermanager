@@ -5,13 +5,13 @@ import com.infodation.task_service.utils.ApiResponse;
 import com.infodation.task_service.utils.ApiResponseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.*;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.io.Console;
 
 @RestController
 @RequestMapping("/api/task-categories")
@@ -22,6 +22,11 @@ public class TaskCategoriesController {
 
     public TaskCategoriesController(ITaskCategoryService taskCategoryService) {
         this.taskCategoryService = taskCategoryService;
+    }
+
+    @GetMapping
+    public String Demo() {
+        return "Hello world";
     }
 
     @PostMapping("/migrate")
