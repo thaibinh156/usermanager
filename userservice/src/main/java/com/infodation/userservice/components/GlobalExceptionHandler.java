@@ -61,4 +61,17 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ApiResponse<Object>> handleNotFoundException(NotFoundException ex) {
+
+        ApiResponse<Object> response = ApiResponse.<Object>builder()
+                .timestamp(LocalDateTime.now())
+                .error(ex.getClass().getSimpleName())
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .data(null)
+                .build();
+
+        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }
