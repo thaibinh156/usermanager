@@ -33,14 +33,16 @@ public class TaskServiceImpl implements ITaskService {
     private final ITaskStatusService taskStatusService;
     private  final TaskServiceRepository taskServiceRepository;
     private final TaskAssignmentRepository taskAssignmentRepository;
+    private final RabbitTemplate rabbitTemplate;
     private static final Logger log = LoggerFactory.getLogger(TaskServiceImpl.class);
 
-    public TaskServiceImpl(TaskRepository taskRepository, ITaskCategoryService taskCategoryService, ITaskStatusService taskStatusService, TaskServiceRepository taskServiceRepository, TaskAssignmentRepository taskAssignmentRepository) {
+    public TaskServiceImpl(TaskRepository taskRepository, ITaskCategoryService taskCategoryService, ITaskStatusService taskStatusService, TaskServiceRepository taskServiceRepository, TaskAssignmentRepository taskAssignmentRepository, RabbitTemplate rabbitTemplate) {
         this.taskRepository = taskRepository;
         this.taskCategoryService = taskCategoryService;
         this.taskStatusService = taskStatusService;
         this.taskServiceRepository = taskServiceRepository;
         this.taskAssignmentRepository = taskAssignmentRepository;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     public void assignTaskToUser(TaskAssignmentDTO taskAssignmentDTO) {
@@ -50,11 +52,16 @@ public class TaskServiceImpl implements ITaskService {
             UserTaskAssignment assignment = new UserTaskAssignment();
             assignment.setUserId(taskAssignmentDTO.getUserId());
             assignment.setTask(task);
+            sendNotificationToRabbitMQ(taskAssignmentDTO);
             taskAssignmentRepository.save(assignment);
         } catch (Exception e) {
             log.error("Error occurred while assigning task: ", e);
             throw new RuntimeException("Error occurred while assigning task", e);
         }
+    }
+    public void sendNotificationToRabbitMQ(TaskAssignmentDTO message) {
+        rabbitTemplate.convertAndSend("sendNotification", message);
+        log.info("Messages sent: -----> " + message);
     }
 
     @Override

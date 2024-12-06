@@ -11,7 +11,6 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateNotificationDTO {
-    @Valid
 
     @NotNull(message = "User ID is required")
     @NotBlank(message = "User ID is required")

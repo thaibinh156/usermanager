@@ -27,7 +27,7 @@ public class NotificationController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Notifications>> create(@Valid @RequestBody CreateNotificationDTO notificationDTO) {
+    public ResponseEntity<ApiResponse<Notifications>> create(@RequestBody CreateNotificationDTO notificationDTO) {
         logger.info("Creating notification for user with ID: {}", notificationDTO.getUserId());
         Notifications notification = notificationService.saveNotification(notificationDTO);
         HttpStatus status = HttpStatus.CREATED;

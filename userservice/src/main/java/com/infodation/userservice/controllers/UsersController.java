@@ -43,7 +43,7 @@ public class UsersController {
     }
     private final RestTemplate restTemplate;
     @PostMapping("/{userId}/task-assign")
-    public ResponseEntity<TaskAssignmentDTO> assignTask(@Valid @RequestBody TaskAssignmentDTO taskAssignmentDTO) {
+    public ResponseEntity<TaskAssignmentDTO> assignTask(@RequestBody TaskAssignmentDTO taskAssignmentDTO) {
         logger.info("Received request to assign task for user with ID: {}", taskAssignmentDTO.getUserId());
         try {
             TaskAssignmentDTO response = userService.createTaskAssignment(taskAssignmentDTO);

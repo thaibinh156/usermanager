@@ -20,17 +20,12 @@ import java.util.List;
 public class TasksController {
 
     private final ITaskService taskService;
-    private final RabbitTemplate rabbitTemplate;
     private static final Logger log = LoggerFactory.getLogger(TasksController.class);
 
-    public TasksController(ITaskService taskService, RabbitTemplate rabbitTemplate) {
+    public TasksController(ITaskService taskService) {
         this.taskService = taskService;
-        this.rabbitTemplate = rabbitTemplate;
     }
-    public void sendNotificationToUser(TaskAssignmentDTO message) {
-        rabbitTemplate.convertAndSend("sendNotification", message);
-        log.info("Messages sent: -----> " + message);
-    }
+
     @PostMapping("/assign")
     public ResponseEntity<String> assignTaskToUser(@RequestBody TaskAssignmentDTO taskAssignmentDTO) {
         try {
@@ -39,7 +34,7 @@ public class TasksController {
             // Save assignment to database
             taskService.assignTaskToUser(taskAssignmentDTO);
 
-            sendNotificationToUser(taskAssignmentDTO);
+
             return ResponseEntity.ok("Task assigned successfully.");
         } catch (Exception e) {
             log.error("Error occurred while assigning task: ", e);
