@@ -33,4 +33,7 @@ public class CreateUserDTO {
 
     @NotNull(message = "Sex is required")
     private Sex sex;
+
+    private String username;
+    private String password;
 }
