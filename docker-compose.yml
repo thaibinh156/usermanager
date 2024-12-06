@@ -23,6 +23,18 @@ services:
         volumes:
             - redis_data:/data
 
+    rabbitmq:
+        image: rabbitmq:management
+        container_name: rabbitmq_container
+        ports:
+            -   "5672:5672"
+            -   "15672:15672"
+        environment:
+            RABBITMQ_DEFAULT_USER: guest
+            RABBITMQ_DEFAULT_PASSWORD: guest
+        volumes:
+            -   rabbit_data:/var/lib/rabbitmq
+
     user-service:
         container_name: user-service-container
         build:
@@ -39,10 +51,15 @@ services:
             - DB_USERNAME=root
             - DB_PASSWORD=root
             - SERVER_PORT=8080
+            - RABBITMQ_HOST:rabbitmq
+            - RABBITMQ_PORT:5672
+            - RABBITMQ_USER:guest
+            - RABBITMQ_PASS:guest
             - TASK_SERVICE_BASE_URL=http://task-service-container:8081
             - HOST=127.0.3.1
         depends_on:
             - mysql
+            - rabbitmq
 
     task-service:
         container_name: task-service-container
@@ -59,6 +76,10 @@ services:
             - DB_URL=jdbc:mysql://mysql:3306/mydb?allowPublicKeyRetrieval=true&useSSL=false
             - DB_USERNAME=root
             - DB_PASSWORD=root
+            - RABBITMQ_HOST:rabbitmq
+            - RABBITMQ_PORT:5672
+            - RABBITMQ_USER:guest
+            - RABBITMQ_PASS:guest
             - SERVER_PORT=8081
             - AUTH_BASE_URL=http://user-service-container:8080
             - HOST=127.0.3.1
@@ -69,3 +90,4 @@ services:
 volumes:
     mysql_data:
     redis_data:
+    rabbit_data:

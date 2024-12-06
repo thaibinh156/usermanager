@@ -24,6 +24,7 @@
 
 # Ignore logs
 *.log
+./logs/
 
 # Ignore IDE specific files (e.g., Visual Studio Code)
 .vscode/
