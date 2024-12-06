@@ -2,8 +2,8 @@ package com.infodation.task_service.services;
 
 import com.infodation.task_service.models.TaskStatus;
 import com.infodation.task_service.repositories.TaskStatusRepository;
-import com.infodation.task_service.services.absservices.AbstractImportCSV;
 import com.infodation.task_service.services.iServices.ITaskStatusService;
+import com.infodation.task_service.utils.ImportCSVUtil;
 import com.opencsv.CSVReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.concurrent.CompletableFuture;
 
 @Service
-public class TaskStatusServiceImpl extends AbstractImportCSV<TaskStatus> implements ITaskStatusService {
+public class TaskStatusServiceImpl implements ITaskStatusService {
 
     private final TaskStatusRepository taskStatusRepository;
     private static final Logger log = LoggerFactory.getLogger(TaskServiceImpl.class);
@@ -36,23 +36,9 @@ public class TaskStatusServiceImpl extends AbstractImportCSV<TaskStatus> impleme
 
     @Async
     public CompletableFuture<Void> importTaskStatusesFromCSVFIle(MultipartFile file) throws Exception {
-        List<TaskStatus> statuses;
 
-        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream()));
-             CSVReader csvReader = new CSVReader(bufferedReader)) {
-            List<String[]> rows = csvReader.readAll();
-            statuses = this.readAndSaveCSV(rows);
-            if (statuses.size() > 0) {
-                log.info("Finished reading file. Total valid lines: {}", statuses.size());
-                taskStatusRepository.saveAll(statuses);
-            } else {
-                log.info("Can not save Status");
-            }
-
-        } catch (Exception ex) {
-            log.error(ex.getMessage());
-            throw new Exception(ex.getMessage());
-        }
+        ImportCSVUtil<TaskStatus> importCSVUtil = new ImportCSVUtil<>();
+        importCSVUtil.readAndSaveCSV(taskStatusRepository, file ,this::mapRowToData);
 
         return CompletableFuture.allOf();
     }
@@ -62,18 +48,18 @@ public class TaskStatusServiceImpl extends AbstractImportCSV<TaskStatus> impleme
         return taskStatusRepository.findById(id);
     }
 
-    @Override
-    protected TaskStatus mappingValue(String[] row) throws Exception {
+    protected TaskStatus mapRowToData(String[] row) throws Exception {
+        String name = row[NAME_ROW_INDEX].toUpperCase();
 
-        if (taskStatusRepository.existsByName(row[NAME_ROW_INDEX])) {
-            log.error("Status named {} is exist",row[NAME_ROW_INDEX]);
+        if (taskStatusRepository.existsByName(name)) {
+            log.error("Status named {} is exist",name);
             return null;
         }
 
         TaskStatus newStatus = new TaskStatus();
 
         newStatus.setId(Long.parseLong(row[ID_ROW_INDEX]));
-        newStatus.setName(row[NAME_ROW_INDEX]);
+        newStatus.setName(name);
         newStatus.setDescription(row[DESCRIPTION_ROW_INDEX]);
         Date date = formatter.parse(row[CREATED_AT_ROW_INDEX].substring(0, 23));
         newStatus.setCreatedAt(date);

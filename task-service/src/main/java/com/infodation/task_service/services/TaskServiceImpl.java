@@ -36,6 +36,15 @@ public class TaskServiceImpl implements ITaskService {
     private  final TaskServiceRepository taskServiceRepository;
     private static final Logger log = LoggerFactory.getLogger(TaskServiceImpl.class);
 
+    final int TITLE_ROW_INDEX = 1;
+    final int DESCRIPTION_ROW_INDEX = 2;
+    final int CATEGORY_ROW_INDEX = 3;
+    final int STATUS_ROW_INDEX = 4;
+    final int DUE_DATE_ROW_INDEX = 5;
+    final int PRIORITY_ROW_INDEX = 6;
+    final int CREATED_AT_ROW_INDEX = 7;
+    final int UPDATED_AT_ROW_INDEX = 8;
+
     public TaskServiceImpl(TaskRepository taskRepository, ITaskCategoryService taskCategoryService, ITaskStatusService taskStatusService, TaskServiceRepository taskServiceRepository) {
         this.taskRepository = taskRepository;
         this.taskCategoryService = taskCategoryService;
@@ -62,15 +71,6 @@ public class TaskServiceImpl implements ITaskService {
         String message;
         HttpStatus status;
 
-        final int TITLE_ROW_INDEX = 1;
-        final int DESCRIPTION_ROW_INDEX = 2;
-        final int CATEGORY_ROW_INDEX = 3;
-        final int STATUS_ROW_INDEX = 4;
-        final int DUE_DATE_ROW_INDEX = 5;
-        final int PRIORITY_ROW_INDEX = 6;
-        final int CREATED_AT_ROW_INDEX = 7;
-        final int UPDATED_AT_ROW_INDEX = 8;
-
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(file.getInputStream()));
              CSVReader csvReader = new CSVReader(bufferedReader)) {
 
@@ -84,9 +84,9 @@ public class TaskServiceImpl implements ITaskService {
                 Optional<TaskStatus> taskStatus = Optional.empty();
 
                 if (!row[CATEGORY_ROW_INDEX].isEmpty())
-                    category = taskCategoryService.getCategoryById((long) Double.parseDouble(row[3]));
+                    category = taskCategoryService.getCategoryById((long) Double.parseDouble(row[CATEGORY_ROW_INDEX]));
                 if (!row[STATUS_ROW_INDEX].isEmpty())
-                    taskStatus = taskStatusService.getStatusById(Long.parseLong(row[4]));
+                    taskStatus = taskStatusService.getStatusById(Long.parseLong(row[STATUS_ROW_INDEX]));
 
                 if (taskStatus.isEmpty()) {
                     message = "Status not found at row " + i;
@@ -128,6 +128,20 @@ public class TaskServiceImpl implements ITaskService {
         }
 
         return ApiResponseUtil.buildApiResponse(null, status, message, null);
+    }
+
+    private Task rowToTask(String[] row) throws Exception {
+        Optional<TaskCategory> category = Optional.empty();
+        Optional<TaskStatus> taskStatus = Optional.empty();
+
+        if (!row[CATEGORY_ROW_INDEX].isEmpty())
+            category = taskCategoryService.getCategoryById((long) Double.parseDouble(row[CATEGORY_ROW_INDEX]));
+        if (!row[STATUS_ROW_INDEX].isEmpty())
+            taskStatus = taskStatusService.getStatusById(Long.parseLong(row[STATUS_ROW_INDEX]));
+
+        if (taskStatus.isEmpty()) {
+            throw new
+        }
     }
 }
 
