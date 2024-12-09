@@ -57,11 +57,11 @@ public class UsersController {
     }
     // API receives user_id and calls the task-service API to fetch the user's tasks
     @GetMapping("/{userId}/tasks")
-    public ResponseEntity<TaskUserResponseDTO> getUserWithTasks(@PathVariable String userId) {
+    public ResponseEntity<TaskUserResponseDTO> getUserWithTasks(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token,@PathVariable String userId) {
         logger.info("Received request from userId: {}", userId);
         // Call the service method to get User and tasks information
         try {
-            TaskUserResponseDTO response = userService.getUserWithTasks(userId);
+            TaskUserResponseDTO response = userService.getUserWithTasks(token,userId);
             logger.info("Successfully retrieved tasks for user ID: {}", userId);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {

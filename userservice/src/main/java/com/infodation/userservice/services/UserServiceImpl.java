@@ -84,7 +84,7 @@ public class UserServiceImpl implements IUserService {
         return taskAssignmentDTO;
     }
     @Override
-    public TaskUserResponseDTO getUserWithTasks(String userId) {
+    public TaskUserResponseDTO getUserWithTasks(String token,String userId) {
         try {
             // Find the user in the database based on user_id
             User user = userRepository.findByUserId(userId).orElse(null);
@@ -92,12 +92,18 @@ public class UserServiceImpl implements IUserService {
             // Use UserMapper to convert User to UserDTO
             UserDTO userDTO = UserMapper.INSTANCE.userToUserDTO(user);
 
+            HttpHeaders headers = new HttpHeaders();
+            headers.set(HttpHeaders.AUTHORIZATION, token);
+            HttpEntity<Void> httpEntity = new HttpEntity<>(headers);
+
+            RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<List<TaskDTO>> taskResponse = restTemplate.exchange(
                     taskServiceBaseUrl + "/api/tasks/user/" + user.getId(),
                     HttpMethod.GET,
-                    null,
+                    httpEntity,
                     new ParameterizedTypeReference<List<TaskDTO>>() {}
             );
+
             List<TaskDTO> tasks = taskResponse.getBody();
 
             // Create TaskUserResponseDTO and return it
