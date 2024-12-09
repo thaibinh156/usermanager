@@ -54,7 +54,7 @@ public class TaskServiceImpl implements ITaskService {
             sendNotificationToRabbitMQ(taskAssignmentDTO);
             taskAssignmentRepository.save(assignment);
         } catch (Exception e) {
-            log.error("Error occurred while assigning task: ", e);
+            log.error("Error occurred while assigning task: ", e.getMessage());
             throw new RuntimeException("Error occurred while assigning task", e);
         }
     }

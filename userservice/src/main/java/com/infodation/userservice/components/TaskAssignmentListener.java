@@ -29,7 +29,7 @@ public class TaskAssignmentListener {
         this.userRepository = userRepository;
     }
 
-    @RabbitListener(queues = "sendNotification")
+    @RabbitListener(queues = "sendNotificationToRabbitMQ")
     public void handleNotification(TaskAssignmentDTO taskAssignmentDTO) {
         try {
             // Query user information from the User table

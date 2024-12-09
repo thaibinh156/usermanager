@@ -10,6 +10,7 @@ import com.infodation.userservice.utils.ApiResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -43,10 +44,10 @@ public class UsersController {
     }
     private final RestTemplate restTemplate;
     @PostMapping("/{userId}/task-assign")
-    public ResponseEntity<TaskAssignmentDTO> assignTask(@RequestBody TaskAssignmentDTO taskAssignmentDTO) {
+    public ResponseEntity<TaskAssignmentDTO> assignTask(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @RequestBody TaskAssignmentDTO taskAssignmentDTO) {
         logger.info("Received request to assign task for user with ID: {}", taskAssignmentDTO.getUserId());
         try {
-            TaskAssignmentDTO response = userService.createTaskAssignment(taskAssignmentDTO);
+            TaskAssignmentDTO response = userService.createTaskAssignment(token,taskAssignmentDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
 
         } catch (Exception e) {

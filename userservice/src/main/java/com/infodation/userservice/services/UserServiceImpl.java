@@ -23,14 +23,17 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.BufferedReader;
@@ -59,7 +62,7 @@ public class UserServiceImpl implements IUserService {
     @Value("${task.service.baseUrl}")
     private String taskServiceBaseUrl;
     @Override
-    public TaskAssignmentDTO createTaskAssignment(@RequestBody TaskAssignmentDTO taskAssignmentDTO) {
+    public TaskAssignmentDTO createTaskAssignment(String token,TaskAssignmentDTO taskAssignmentDTO) {
         Optional<User> userOptional = userRepository.findByUserId(taskAssignmentDTO.getUserId());
         if (userOptional.isEmpty()) {
             logger.warn("User with ID: {} not found.", taskAssignmentDTO.getUserId());
@@ -69,9 +72,12 @@ public class UserServiceImpl implements IUserService {
         taskAssignmentDTO.setUserId(String.valueOf(userId));
         String taskServiceUrl = taskServiceBaseUrl + "/api/tasks/assign";
         try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.set(HttpHeaders.AUTHORIZATION, token);
+            HttpEntity<TaskAssignmentDTO> httpEntity = new HttpEntity<>(taskAssignmentDTO, headers);
             RestTemplate restTemplate = new RestTemplate();
             ResponseEntity<Void> response = restTemplate.exchange(
-                    taskServiceUrl, HttpMethod.POST, new HttpEntity<>(taskAssignmentDTO), Void.class);
+                    taskServiceUrl, HttpMethod.POST, httpEntity, Void.class);
         } catch (Exception e) {
             logger.error("Failed to communicate with task-service for task assignment.", e);
         }

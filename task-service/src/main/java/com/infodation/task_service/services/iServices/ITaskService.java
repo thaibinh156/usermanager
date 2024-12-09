@@ -10,6 +10,6 @@ import java.util.concurrent.CompletableFuture;
 
 public interface ITaskService {
     ApiResponse<?> importTaskFromCSVFile(MultipartFile csv) throws Exception;
-     List<TaskProjection> getTasksByUserId(Long userId);
+    List<TaskProjection> getTasksByUserId(Long userId);
     void assignTaskToUser(TaskAssignmentDTO taskAssignmentDTO);
 }

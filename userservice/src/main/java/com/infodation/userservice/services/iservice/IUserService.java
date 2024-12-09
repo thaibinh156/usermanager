@@ -16,7 +16,7 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 public interface IUserService {
-    TaskAssignmentDTO createTaskAssignment(TaskAssignmentDTO taskAssignmentDTO);
+    TaskAssignmentDTO createTaskAssignment(String token,TaskAssignmentDTO taskAssignmentDTO);
     TaskUserResponseDTO getUserWithTasks(String userId);
     Page<User> getAll(Pageable pageable, String name);
     User getByUserId(String userId);

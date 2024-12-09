@@ -13,7 +13,7 @@ public class RabbitMQConfig {
 
     @Bean
     public Queue queue() {
-        return new Queue("sendNotification", true);
+        return new Queue("sendNotificationToRabbitMQ", true);
     }
 
     @Bean
