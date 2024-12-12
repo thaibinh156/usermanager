@@ -37,7 +37,6 @@ public class NotificationController {
         // Log the raw response to check the structure
         ApiResponse<Notifications> response = ApiResponseUtil.buildApiResponse(notification, status, message, null);
         logger.debug("Response to return: {}", response);  // Debugging the response
-
         return new ResponseEntity<>(response, status);
     }
 

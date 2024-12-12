@@ -20,7 +20,6 @@ import java.util.Optional;
 public class TaskAssignmentListener {
 
     private static final Logger logger = LoggerFactory.getLogger(TaskAssignmentListener.class);
-
     private final NotificationRepository notiRepository;
     private final UserRepository userRepository;
 
@@ -34,21 +33,25 @@ public class TaskAssignmentListener {
         try {
             // Query user information from the User table
             Optional<User> userOptional = userRepository.findById(Long.valueOf(taskAssignmentDTO.getUserId()));
-            User user = userOptional.get();
-            logger.info("Found user: {}", user.getUserId());
+            if (userOptional.isEmpty()) {
+                logger.error("User not found for userId: {}", taskAssignmentDTO.getUserId());
+            } else {
+                User user = userOptional.get();
+                logger.info("Found user: {}", user.getUserId());
 
-            // Create CreateNotificationDTO from TaskAssignmentDTO
-            CreateNotificationDTO notificationDTO = new CreateNotificationDTO();
-            notificationDTO.setUserId(user.getUserId());
-            notificationDTO.setMessage("Task " + taskAssignmentDTO.getTaskId() + " has been assigned to you.");
+                // Create CreateNotificationDTO from TaskAssignmentDTO
+                CreateNotificationDTO notificationDTO = new CreateNotificationDTO();
+                notificationDTO.setUserId(user.getUserId());
+                notificationDTO.setMessage("Task " + taskAssignmentDTO.getTaskId() + " has been assigned to you.");
 
-            // Convert CreateNotificationDTO to Notifications (if needed)
-            Notifications notification = NotificationMapper.INSTANCE.createNotificationDTOToNotification(notificationDTO);
-            notification.setUser(user);
+                // Convert CreateNotificationDTO to Notifications (if needed)
+                Notifications notification = NotificationMapper.INSTANCE.createNotificationDTOToNotification(notificationDTO);
+                notification.setUser(user);
 
-            // Save the notification to the database
-            notiRepository.save(notification);
-            logger.info("Notification saved successfully for user: {}", user.getUserId());
+                // Save the notification to the database
+                notiRepository.save(notification);
+                logger.info("Notification saved successfully for user: {}", user.getUserId());
+            }
         } catch (Exception e) {
             logger.error("Error processing notification for task: {}", taskAssignmentDTO.getTaskId(), e);
         }

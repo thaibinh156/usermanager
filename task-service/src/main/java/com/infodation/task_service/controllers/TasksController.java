@@ -30,11 +30,8 @@ public class TasksController {
     public ResponseEntity<String> assignTaskToUser(@RequestBody TaskAssignmentDTO taskAssignmentDTO) {
         try {
             log.info("Assigning task {} to user {}", taskAssignmentDTO.getTaskId(), taskAssignmentDTO.getUserId());
-
             // Save assignment to database
             taskService.assignTaskToUser(taskAssignmentDTO);
-
-
             return ResponseEntity.ok("Task assigned successfully.");
         } catch (Exception e) {
             log.error("Error occurred while assigning task: ", e);
@@ -48,7 +45,6 @@ public class TasksController {
         try {
             // Retrieve the list of tasks from TaskService
             List<TaskProjection> tasks = taskService.getTasksByUserId(userId);
-
             // If no tasks are found
             if (tasks.isEmpty()) {
                 log.warn("No tasks found for user with ID: {}", userId);
@@ -68,10 +64,8 @@ public class TasksController {
     @PostMapping("/migrate")
     public ResponseEntity<ApiResponse<?>> importTasks(@RequestParam("file") MultipartFile file) throws Exception{
         log.info("Starting import process for file: '{}'", file.getOriginalFilename());
-
         HttpStatus status;
         ApiResponse<?> response;
-
         if (file == null || file.isEmpty()) {
             String message = ("The uploaded file is empty.");
             status = HttpStatus.BAD_REQUEST;

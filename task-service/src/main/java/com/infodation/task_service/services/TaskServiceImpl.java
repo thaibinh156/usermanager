@@ -51,8 +51,8 @@ public class TaskServiceImpl implements ITaskService {
             UserTaskAssignment assignment = new UserTaskAssignment();
             assignment.setUserId(taskAssignmentDTO.getUserId());
             assignment.setTask(task);
-            sendNotificationToRabbitMQ(taskAssignmentDTO);
             taskAssignmentRepository.save(assignment);
+            sendNotificationToRabbitMQ(taskAssignmentDTO);
         } catch (Exception e) {
             log.error("Error occurred while assigning task: ", e);
             throw new RuntimeException("Error occurred while assigning task", e);
@@ -60,7 +60,7 @@ public class TaskServiceImpl implements ITaskService {
     }
     public void sendNotificationToRabbitMQ(TaskAssignmentDTO message) {
         rabbitTemplate.convertAndSend("sendNotificationToRabbitMQ", message);
-        log.info("Messages sent: -----> " + message);
+        log.debug("Messages sent: -----> " + message);
     }
 
     @Override
