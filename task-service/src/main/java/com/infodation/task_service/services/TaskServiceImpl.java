@@ -3,7 +3,7 @@ package com.infodation.task_service.services;
 import com.infodation.task_service.components.BadRequestException;
 import com.infodation.task_service.models.TaskProjection;
 import com.infodation.task_service.repositories.TaskServiceRepository;
-import com.infodation.task_service.utils.ImportCSVUtil;
+import com.infodation.task_service.utils.ImportCSVHandler;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,11 +30,11 @@ public class TaskServiceImpl implements ITaskService {
     private final TaskRepository taskRepository;
     private final ITaskCategoryService taskCategoryService;
     private final ITaskStatusService taskStatusService;
-    private  final TaskServiceRepository taskServiceRepository;
+    private final TaskServiceRepository taskServiceRepository;
     private static final Logger log = LoggerFactory.getLogger(TaskServiceImpl.class);
 
-    SimpleDateFormat dueDateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-    SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    private final SimpleDateFormat dueDateFormatter;
+    private final SimpleDateFormat dateFormatter;
 
     final int TITLE_ROW_INDEX = 1;
     final int DESCRIPTION_ROW_INDEX = 2;
@@ -45,11 +45,13 @@ public class TaskServiceImpl implements ITaskService {
     final int CREATED_AT_ROW_INDEX = 7;
     final int UPDATED_AT_ROW_INDEX = 8;
 
-    public TaskServiceImpl(TaskRepository taskRepository, ITaskCategoryService taskCategoryService, ITaskStatusService taskStatusService, TaskServiceRepository taskServiceRepository) {
+    public TaskServiceImpl(TaskRepository taskRepository, ITaskCategoryService taskCategoryService, ITaskStatusService taskStatusService, TaskServiceRepository taskServiceRepository, SimpleDateFormat dueDateFormatter, SimpleDateFormat dateFormatter) {
         this.taskRepository = taskRepository;
         this.taskCategoryService = taskCategoryService;
         this.taskStatusService = taskStatusService;
         this.taskServiceRepository = taskServiceRepository;
+        this.dueDateFormatter = dueDateFormatter;
+        this.dateFormatter = dateFormatter;
     }
 
     @Override
@@ -67,8 +69,8 @@ public class TaskServiceImpl implements ITaskService {
     @Override
     @Async
     public CompletableFuture<Void> importTaskFromCSVFile(MultipartFile file) throws Exception {
-        ImportCSVUtil<Task> importCSVUtil = new ImportCSVUtil<>();
-        importCSVUtil.readAndSaveCSV(taskRepository, file, this::mapRowToTask);
+        ImportCSVHandler<Task> importCSVHandler = new ImportCSVHandler<>();
+        importCSVHandler.readAndSaveCSV(taskRepository, file, this::mapRowToTask);
 
         return CompletableFuture.allOf();
     }

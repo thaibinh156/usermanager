@@ -10,9 +10,10 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
-public class ImportCSVUtil<T> {
-    private static final Logger log = LoggerFactory.getLogger(ImportCSVUtil.class);
+public class ImportCSVHandler<T> {
+    private static final Logger log = LoggerFactory.getLogger(ImportCSVHandler.class);
 
     public void readAndSaveCSV(JpaRepository<T,?> repository, MultipartFile file, Mapper<T> mapper) throws Exception {
         List<T> entities = new ArrayList<>();
@@ -23,12 +24,9 @@ public class ImportCSVUtil<T> {
             List<String[]> rows = csvReader.readAll();
 
             for (int i = 1; i < rows.size(); i++) {
-                String[] row = rows.get(i);
                 try {
-                    T entity = mapper.mappingData(row);
-                    if (entity != null) {
-                        entities.add(entity);
-                    }
+                    Optional.ofNullable(mapper.mappingData(rows.get(i)))
+                            .ifPresent(entities::add);
                 } catch (Exception e) {
                     log.warn("Error processing row: {} message: {}", i, e.getMessage());
                 }
