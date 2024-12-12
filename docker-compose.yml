@@ -60,6 +60,7 @@ services:
         depends_on:
             - mysql
             - rabbitmq
+            - redis
 
     task-service:
         container_name: task-service-container
@@ -86,6 +87,8 @@ services:
 
         depends_on:
             - mysql
+            - redis
+            - rabbitmq
 
 volumes:
     mysql_data:
