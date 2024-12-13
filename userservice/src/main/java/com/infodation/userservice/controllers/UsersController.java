@@ -1,5 +1,6 @@
 package com.infodation.userservice.controllers;
 
+import com.infodation.userservice.models.TaskDTO.TaskAssignmentDTO;
 import com.infodation.userservice.models.TaskDTO.TaskUserResponseDTO;
 import com.infodation.userservice.models.User;
 import com.infodation.userservice.models.dto.user.CreateUserDTO;
@@ -9,6 +10,7 @@ import com.infodation.userservice.utils.ApiResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import com.infodation.userservice.utils.ApiResponseUtil;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
@@ -37,15 +40,28 @@ public class UsersController {
     public UsersController(IUserService userService, RestTemplate restTemplate) {
         this.userService = userService;
         this.restTemplate = restTemplate;
+
     }
     private final RestTemplate restTemplate;
+    @PostMapping("/{userId}/task-assign")
+    public ResponseEntity<TaskAssignmentDTO> assignTask(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token, @RequestBody TaskAssignmentDTO taskAssignmentDTO) {
+        logger.info("Received request to assign task for user with ID: {}", taskAssignmentDTO.getUserId());
+        try {
+            TaskAssignmentDTO response = userService.createTaskAssignment(token,taskAssignmentDTO);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
+        } catch (Exception e) {
+            logger.warn("Error while processing task assignment for user: {}", taskAssignmentDTO.getUserId(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
     // API receives user_id and calls the task-service API to fetch the user's tasks
     @GetMapping("/{userId}/tasks")
-    public ResponseEntity<TaskUserResponseDTO> getUserWithTasks(@PathVariable String userId) {
+    public ResponseEntity<TaskUserResponseDTO> getUserWithTasks(@RequestHeader(value = HttpHeaders.AUTHORIZATION) String token,@PathVariable String userId) {
         logger.info("Received request from userId: {}", userId);
         // Call the service method to get User and tasks information
         try {
-            TaskUserResponseDTO response = userService.getUserWithTasks(userId);
+            TaskUserResponseDTO response = userService.getUserWithTasks(token,userId);
             logger.info("Successfully retrieved tasks for user ID: {}", userId);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException e) {

@@ -9,7 +9,6 @@ import com.infodation.userservice.repositories.NotificationRepository;
 import com.infodation.userservice.repositories.UserRepository;
 import com.infodation.userservice.services.iservice.INotificationService;
 import org.springframework.stereotype.Service;
-
 import java.util.Optional;
 
 @Service
@@ -46,6 +45,4 @@ public class NotificationServiceImpl implements INotificationService {
             return null;
         }
     }
-
-
 }
