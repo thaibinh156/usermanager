@@ -1,8 +1,12 @@
 package com.infodation.task_service.services;
 
+import com.infodation.task_service.models.*;
+import com.infodation.task_service.models.dto.TaskAssignmentDTO;
+import com.infodation.task_service.repositories.TaskAssignmentRepository;
 import com.infodation.task_service.components.BadRequestException;
 import com.infodation.task_service.models.TaskProjection;
 import com.infodation.task_service.repositories.TaskServiceRepository;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import com.infodation.task_service.utils.ImportCSVHandler;
 import org.springframework.stereotype.Service;
 import java.util.ArrayList;
@@ -20,6 +24,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -30,7 +36,9 @@ public class TaskServiceImpl implements ITaskService {
     private final TaskRepository taskRepository;
     private final ITaskCategoryService taskCategoryService;
     private final ITaskStatusService taskStatusService;
-    private final TaskServiceRepository taskServiceRepository;
+    private  final TaskServiceRepository taskServiceRepository;
+    private final TaskAssignmentRepository taskAssignmentRepository;
+    private final RabbitTemplate rabbitTemplate;
     private static final Logger log = LoggerFactory.getLogger(TaskServiceImpl.class);
 
     private final SimpleDateFormat dueDateFormatter;
@@ -45,13 +53,40 @@ public class TaskServiceImpl implements ITaskService {
     final int CREATED_AT_ROW_INDEX = 7;
     final int UPDATED_AT_ROW_INDEX = 8;
 
-    public TaskServiceImpl(TaskRepository taskRepository, ITaskCategoryService taskCategoryService, ITaskStatusService taskStatusService, TaskServiceRepository taskServiceRepository, SimpleDateFormat dueDateFormatter, SimpleDateFormat dateFormatter) {
+    public TaskServiceImpl(TaskRepository taskRepository, ITaskCategoryService taskCategoryService,
+                           ITaskStatusService taskStatusService,
+                           TaskServiceRepository taskServiceRepository,
+                           TaskAssignmentRepository taskAssignmentRepository,
+                           RabbitTemplate rabbitTemplate,
+                           SimpleDateFormat dueDateFormatter,
+                           SimpleDateFormat dateFormatter) {
         this.taskRepository = taskRepository;
         this.taskCategoryService = taskCategoryService;
         this.taskStatusService = taskStatusService;
         this.taskServiceRepository = taskServiceRepository;
+        this.taskAssignmentRepository = taskAssignmentRepository;
+        this.rabbitTemplate = rabbitTemplate;
         this.dueDateFormatter = dueDateFormatter;
         this.dateFormatter = dateFormatter;
+    }
+
+    public void assignTaskToUser(TaskAssignmentDTO taskAssignmentDTO) {
+        try {
+            Task task = taskRepository.findById(taskAssignmentDTO.getTaskId())
+                    .orElseThrow(() -> new IllegalArgumentException("Task not found with ID: " + taskAssignmentDTO.getTaskId()));
+            UserTaskAssignment assignment = new UserTaskAssignment();
+            assignment.setUserId(taskAssignmentDTO.getUserId());
+            assignment.setTask(task);
+            taskAssignmentRepository.save(assignment);
+            sendNotificationToRabbitMQ(taskAssignmentDTO);
+        } catch (Exception e) {
+            log.error("Error occurred while assigning task: ", e);
+            throw new RuntimeException("Error occurred while assigning task", e);
+        }
+    }
+    public void sendNotificationToRabbitMQ(TaskAssignmentDTO message) {
+        rabbitTemplate.convertAndSend("sendNotificationToRabbitMQ", message);
+        log.debug("Messages sent: -----> " + message);
     }
 
     @Override

@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.infodation</groupId>
 	<artifactId>userservice</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<name>user-service</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
@@ -158,19 +158,13 @@
         <dependency>
             <groupId>com.infodation</groupId>
             <artifactId>task-service</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.infodation</groupId>
-            <artifactId>task-service</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>0.0.1</version>
             <scope>compile</scope>
         </dependency>
 		<dependency>
 			<groupId>com.infodation</groupId>
 			<artifactId>task-service</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.1</version>
 			<scope>compile</scope>
 		</dependency>
 
@@ -178,6 +172,10 @@
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
 			<version>3.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-amqp</artifactId>
 		</dependency>
 
 
