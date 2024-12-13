@@ -16,17 +16,21 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableSwagger2
 public class SpringFoxConfig implements WebMvcConfigurer {
+    @Value("${springfox.documentation.swagger.v2.host}")
+    String host;
+
     @Value("${server.port}")
-    private int port;
+    String port;
 
     @Bean
     public Docket api() {
+        String url = host + ":" + port;
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.infodation.userservice"))
                 .paths(PathSelectors.any())
                 .build()
-                .host("localhost:" + port);
+                .host(url);
     }
 
     @Override

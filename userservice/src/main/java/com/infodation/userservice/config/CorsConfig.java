@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
 
-    @Value("${auth.service.accessUrl}")
+    @Value("${task.service.baseUrl}")
     private String accessUrl;
 
     @Override

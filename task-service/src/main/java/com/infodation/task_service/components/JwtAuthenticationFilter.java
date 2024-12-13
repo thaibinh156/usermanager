@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final RestTemplate restTemplate;
     private final ObjectMapper mapper;
-    @Value("${auth.service.baseUrl}")
+    @Value("${auth.base.url}")
     private String authServiceUrl;
 
     final String BEAR_TOKEN_PREFIX = "Bearer ";
