@@ -8,6 +8,6 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public interface ITaskService {
-    ApiResponse<?> importTaskFromCSVFile(MultipartFile csv) throws Exception;
-     List<TaskProjection> getTasksByUserId(Long userId);
+    CompletableFuture<Void> importTaskFromCSVFile(MultipartFile csv) throws Exception;
+    List<TaskProjection> getTasksByUserId(Long userId);
 }
