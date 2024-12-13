@@ -1,21 +1,22 @@
 package com.infodation.task_service.components;
 
 import com.infodation.task_service.utils.ApiResponse;
+import com.infodation.task_service.utils.ApiResponseUtil;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-@ControllerAdvice
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
@@ -33,7 +34,7 @@ public class GlobalExceptionHandler {
                 .data(errors)
                 .build();
 
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
@@ -46,7 +47,7 @@ public class GlobalExceptionHandler {
                 .data(null)
                 .build();
 
-        return new ResponseEntity<>(response, HttpStatus.CONFLICT);
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(response);
     }
 
     @ExceptionHandler(Exception.class)
@@ -59,6 +60,12 @@ public class GlobalExceptionHandler {
                 .data(null)
                 .build();
 
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+    }
+
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ApiResponse<String>> handleBadRequestException(BadRequestException ex, WebRequest request) {
+        ApiResponse<String> response = ApiResponseUtil.buildApiResponse(null, HttpStatus.BAD_REQUEST, ex.getMessage(), null);
+        return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
     }
 }

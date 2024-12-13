@@ -64,18 +64,21 @@ public class TasksController {
     @PostMapping("/migrate")
     public ResponseEntity<ApiResponse<?>> importTasks(@RequestParam("file") MultipartFile file) throws Exception{
         log.info("Starting import process for file: '{}'", file.getOriginalFilename());
+        String message;
         HttpStatus status;
-        ApiResponse<?> response;
+
         if (file == null || file.isEmpty()) {
-            String message = ("The uploaded file is empty.");
+            message = ("The uploaded file is empty.");
             status = HttpStatus.BAD_REQUEST;
-            response = ApiResponseUtil.buildApiResponse(null, HttpStatus.BAD_REQUEST, message, null);
+
             log.error(message);
         } else {
+            taskService.importTaskFromCSVFile(file);
             status = HttpStatus.OK;
-            response = taskService.importTaskFromCSVFile(file);
+            message = "Upload file successfully";
+            log.info(message);
         }
-
+        ApiResponse<?> response = ApiResponseUtil.buildApiResponse(null, HttpStatus.OK, message, null);
         return new ResponseEntity<>(response, status);
     }
 }
