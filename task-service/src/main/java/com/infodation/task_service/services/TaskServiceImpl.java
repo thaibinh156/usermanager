@@ -152,5 +152,9 @@ public class TaskServiceImpl implements ITaskService {
 
         return newTask;
     }
+
+    public Task saveTask(Task task) {
+        return taskRepository.save(task);
+    }
 }
 

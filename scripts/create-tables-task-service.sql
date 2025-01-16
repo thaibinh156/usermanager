@@ -51,3 +51,6 @@ FOREIGN KEY (user_id) REFERENCES users(id);
 ALTER TABLE assignments
 ADD CONSTRAINT FK_Task_Id
 FOREIGN KEY (task_id) REFERENCES tasks(id);
+
+ALTER TABLE tasks
+ADD COLUMN create_by VARCHAR(255) NOT NULL REFERENCES users(user_id)

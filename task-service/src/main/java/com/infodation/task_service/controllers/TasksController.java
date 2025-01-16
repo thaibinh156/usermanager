@@ -1,5 +1,6 @@
 package com.infodation.task_service.controllers;
 
+import com.infodation.task_service.models.Task;
 import com.infodation.task_service.models.TaskProjection;
 import com.infodation.task_service.models.dto.TaskAssignmentDTO;
 import com.infodation.task_service.services.iServices.ITaskService;
@@ -80,5 +81,17 @@ public class TasksController {
         }
         ApiResponse<?> response = ApiResponseUtil.buildApiResponse(null, HttpStatus.OK, message, null);
         return new ResponseEntity<>(response, status);
+    }
+
+    @PostMapping
+    public ResponseEntity<Task> createTask(@RequestBody Task task) {
+        try {
+            log.info("Creating task: {}", task);
+            Task newTask = taskService.saveTask(task);
+            return ResponseEntity.ok(newTask);
+        } catch (Exception e) {
+            log.error("Error occurred while creating task: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 }

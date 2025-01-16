@@ -1,0 +1,22 @@
+// Định nghĩa đối tượng user
+definition user {}
+
+// Định nghĩa đối tượng task, trong đó có một quan hệ "create_by" liên kết với đối tượng user
+definition task {
+  relation create_by: user  // Quan hệ task có creator là user
+}
+
+// Định nghĩa đối tượng role, trong đó có quan hệ "has_role" liên kết với user
+definition role {
+  relation has_role: user  // Người dùng có thể có các role (admin, normal, v.v.)
+}
+
+// Định nghĩa role admin, với quyền cấp cho role
+definition admin_role {
+  relation grants: role  // Admin có thể cấp quyền cho role khác
+}
+
+// Định nghĩa role normal (user), có thể có quyền cho người dùng bình thường
+definition normal_role {
+  relation grants: role  // Normal có thể có quyền khác so với admin
+}

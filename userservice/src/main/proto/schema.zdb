@@ -1,0 +1,7 @@
+definition user {}
+
+definition task {
+    relation owner: user
+    relation viewer: user
+    relation editor: user
+}

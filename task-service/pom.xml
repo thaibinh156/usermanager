@@ -134,6 +134,24 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-web</artifactId>
 		</dependency>
+
+		<!-- SpiceDB dependencies -->
+
+		<dependency>
+			<groupId>com.authzed.api</groupId>
+			<artifactId>authzed</artifactId>
+			<version>v1.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.grpc</groupId>
+			<artifactId>grpc-protobuf</artifactId>
+			<version>1.66.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.grpc</groupId>
+			<artifactId>grpc-stub</artifactId>
+			<version>1.66.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>

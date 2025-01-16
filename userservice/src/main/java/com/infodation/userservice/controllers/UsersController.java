@@ -1,12 +1,15 @@
 package com.infodation.userservice.controllers;
 
+import com.infodation.userservice.components.SpiceDBClient;
 import com.infodation.userservice.models.TaskDTO.TaskAssignmentDTO;
 import com.infodation.userservice.models.TaskDTO.TaskUserResponseDTO;
 import com.infodation.userservice.models.User;
+import com.infodation.userservice.models.dto.AssignRoleRequest;
 import com.infodation.userservice.models.dto.user.CreateUserDTO;
 import com.infodation.userservice.models.dto.user.UpdateUserDTO;
 import com.infodation.userservice.services.iservice.IUserService;
 import com.infodation.userservice.utils.ApiResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -37,10 +40,10 @@ public class UsersController {
 
     private final IUserService userService;
 
-    public UsersController(IUserService userService, RestTemplate restTemplate) {
+    public UsersController(IUserService userService, RestTemplate restTemplate, SpiceDBClient spiceDBClient) {
         this.userService = userService;
         this.restTemplate = restTemplate;
-
+        this.spiceDBClient = spiceDBClient;
     }
     private final RestTemplate restTemplate;
     @PostMapping("/{userId}/task-assign")
@@ -208,5 +211,20 @@ public class UsersController {
                 .message("Validation failed")
                 .data(errors)
                 .build());
+    }
+
+    private final SpiceDBClient spiceDBClient;
+
+    @PostMapping("/create")
+    public ResponseEntity<String> createUser(@RequestBody CreateUserDTO user) {
+        // SAVE USER TO DATABASE
+        userService.save(user);
+        return ResponseEntity.ok("User created successfully");
+    }
+
+    @PostMapping("/{userId}/roles")
+    public ResponseEntity<String> assignRole(@PathVariable String userId, @RequestBody AssignRoleRequest request) {
+        // SEND REQUEST TO SPICEDB TO ASSIGN ROLE
+        return ResponseEntity.ok("Role assigned successfully");
     }
 }

@@ -185,6 +185,44 @@
 			<version>0.9.1</version>
 		</dependency>
 
+		<!-- SpiceDB dependencies -->
+
+		<dependency>
+			<groupId>com.authzed.api</groupId>
+			<artifactId>authzed</artifactId>
+			<version>v1.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.grpc</groupId>
+			<artifactId>grpc-protobuf</artifactId>
+			<version>1.66.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.grpc</groupId>
+			<artifactId>grpc-stub</artifactId>
+			<version>1.66.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.grpc</groupId>
+			<artifactId>grpc-netty-shaded</artifactId>
+			<version>1.66.0</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.authzed.api</groupId>
+			<artifactId>authzed</artifactId>
+			<version>v1.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.grpc</groupId>
+			<artifactId>grpc-protobuf</artifactId>
+			<version>1.66.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.grpc</groupId>
+			<artifactId>grpc-stub</artifactId>
+			<version>1.66.0</version>
+		</dependency>
 	</dependencies>
 
 	<build>
