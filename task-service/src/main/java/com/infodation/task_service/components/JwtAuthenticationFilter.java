@@ -31,6 +31,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private String authServiceUrl;
 
     final String BEAR_TOKEN_PREFIX = "Bearer ";
+    public static String USER_ID  = "";
 
     public JwtAuthenticationFilter(RestTemplate restTemplate, ObjectMapper mapper) {
         this.restTemplate = restTemplate;
@@ -73,6 +74,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 JsonNode jsonNode = mapper.readTree(responseBody);
 
                 String userId = jsonNode.get("data").get("userId").asText();
+                USER_ID = userId;
                 List<String> roles = new ArrayList<>();
                 JsonNode roleJson = jsonNode.get("data").get("roles");
 
@@ -82,7 +84,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
                 if (roles.contains("ROLE_ADMIN") || roles.contains("ROLE_USER")) {
                     Authentication authentication = new UsernamePasswordAuthenticationToken(
-                            userId, null, roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+                            USER_ID, null, roles.stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                     filterChain.doFilter(request, response);
                     return;

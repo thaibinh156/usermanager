@@ -2,6 +2,7 @@ package com.infodation.task_service.services;
 
 import com.infodation.task_service.models.*;
 import com.infodation.task_service.models.dto.TaskAssignmentDTO;
+import com.infodation.task_service.models.dto.TaskCreateDTO;
 import com.infodation.task_service.repositories.TaskAssignmentRepository;
 import com.infodation.task_service.components.BadRequestException;
 import com.infodation.task_service.models.TaskProjection;
@@ -153,8 +154,32 @@ public class TaskServiceImpl implements ITaskService {
         return newTask;
     }
 
-    public Task saveTask(Task task) {
-        return taskRepository.save(task);
+    public Task saveTask(TaskCreateDTO task) {
+        Task newTask = new Task();
+        newTask.setTitle(task.getTitle());
+        newTask.setDescription(task.getDescription());
+        newTask.setCategory(taskCategoryService.getCategoryById(task.getCategoryId()).orElse(null));
+        newTask.setStatus(taskStatusService.getStatusById(task.getStatusId()).orElse(null));
+        newTask.setPriority(Priority.valueOf(task.getPriority().toUpperCase()));
+        newTask.setCreatedBy(task.getUserId());
+        newTask.setCreatedAt(new Date());
+        newTask.setUpdatedAt(new Date());
+        newTask.setPriority(Priority.valueOf(task.getPriority().toUpperCase()));
+        return taskRepository.save(newTask);
     }
+
+    public Task updateTask(Long taskId, TaskCreateDTO task) {
+        Task existingTask = taskRepository.findById(taskId)
+                .orElseThrow(() -> new BadRequestException("Task not found with ID: " + taskId));
+        existingTask.setTitle(task.getTitle());
+        existingTask.setDescription(task.getDescription());
+        existingTask.setCategory(taskCategoryService.getCategoryById(task.getCategoryId()).orElse(null));
+        existingTask.setStatus(taskStatusService.getStatusById(task.getStatusId()).orElse(null));
+        existingTask.setPriority(Priority.valueOf(task.getPriority().toUpperCase()));
+        existingTask.setUpdatedAt(new Date());
+        return taskRepository.save(existingTask);
+    }
+    
+
 }
 

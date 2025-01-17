@@ -1,14 +1,18 @@
 package com.infodation.task_service.controllers;
 
+import com.infodation.task_service.client.SpiceDBClient;
+import com.infodation.task_service.components.JwtAuthenticationFilter;
+import com.infodation.task_service.models.AssignPermissionRequest;
 import com.infodation.task_service.models.Task;
 import com.infodation.task_service.models.TaskProjection;
 import com.infodation.task_service.models.dto.TaskAssignmentDTO;
+import com.infodation.task_service.models.dto.TaskCreateDTO;
 import com.infodation.task_service.services.iServices.ITaskService;
 import com.infodation.task_service.utils.ApiResponse;
 import com.infodation.task_service.utils.ApiResponseUtil;
+import org.checkerframework.checker.units.qual.A;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,9 +26,11 @@ public class TasksController {
 
     private final ITaskService taskService;
     private static final Logger log = LoggerFactory.getLogger(TasksController.class);
+    private final SpiceDBClient spiceDBClient;
 
-    public TasksController(ITaskService taskService) {
+    public TasksController(ITaskService taskService, SpiceDBClient spiceDBClient) {
         this.taskService = taskService;
+        this.spiceDBClient = spiceDBClient;
     }
 
     @PostMapping("/assign")
@@ -63,7 +69,7 @@ public class TasksController {
     }
 
     @PostMapping("/migrate")
-    public ResponseEntity<ApiResponse<?>> importTasks(@RequestParam("file") MultipartFile file) throws Exception{
+    public ResponseEntity<ApiResponse<?>> importTasks(@RequestParam("file") MultipartFile file) throws Exception {
         log.info("Starting import process for file: '{}'", file.getOriginalFilename());
         String message;
         HttpStatus status;
@@ -84,14 +90,66 @@ public class TasksController {
     }
 
     @PostMapping
-    public ResponseEntity<Task> createTask(@RequestBody Task task) {
-        try {
-            log.info("Creating task: {}", task);
-            Task newTask = taskService.saveTask(task);
-            return ResponseEntity.ok(newTask);
-        } catch (Exception e) {
-            log.error("Error occurred while creating task: ", e);
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    public ResponseEntity<ApiResponse<?>> createTask(@RequestBody TaskCreateDTO task) {
+        String message;
+        HttpStatus status;
+
+        String createdBy = JwtAuthenticationFilter.USER_ID;
+        log.info("Received request to create task with title: {} by user with ID: {}", task.getTitle(), createdBy);
+        task.setUserId(createdBy);
+        Task savedTask = taskService.saveTask(task);
+        if (savedTask != null) {
+            message = "Task created successfully";
+            status = HttpStatus.CREATED;
+            // Assign permission to the task using the
+            spiceDBClient.assignPermission(new AssignPermissionRequest(savedTask.getId().toString(),
+                    savedTask.getCreatedBy().toString(),
+                    "task",
+                    "user",
+                    "create_by"));
+            log.info(message);
+        } else {
+            message = "Error occurred while creating task";
+            status = HttpStatus.INTERNAL_SERVER_ERROR;
+            log.error(message);
         }
+
+        ApiResponse<?> response = ApiResponseUtil.buildApiResponse(null, HttpStatus.OK, message, null);
+        return new ResponseEntity<>(response, status);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ApiResponse<?>> updateTask(@PathVariable("id") Long taskId,  @RequestBody TaskCreateDTO task) {
+        String message;
+        HttpStatus status;
+        log.info("Received request userID: {}", JwtAuthenticationFilter.USER_ID);
+        boolean hasPermission = spiceDBClient.checkPermission(new AssignPermissionRequest(taskId.toString(),
+                JwtAuthenticationFilter.USER_ID.toString(),
+                "task",
+                "user",
+                "create_by"));
+
+        if (!hasPermission) {
+            message = "You do not have permission to update this task";
+            status = HttpStatus.FORBIDDEN;
+            log.error(message);
+        } else {
+            log.info("Received request to update task with ID: {}", taskId);
+//            Task updatedTask = taskService.updateTask(taskId, task);
+//            if (updatedTask != null) {
+//                message = "Task updated successfully";
+//                status = HttpStatus.OK;
+//                log.info(message);
+//            } else {
+//                message = "Error occurred while updating task";
+//                status = HttpStatus.INTERNAL_SERVER_ERROR;
+//                log.error(message);
+//            }
+            message = "Ok you are owner of this task";
+            status = HttpStatus.OK;
+        }
+
+        ApiResponse<?> response = ApiResponseUtil.buildApiResponse(null, status, message, null);
+        return new ResponseEntity<>(response, status);
     }
 }

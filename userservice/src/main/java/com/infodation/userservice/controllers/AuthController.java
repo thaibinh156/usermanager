@@ -107,11 +107,6 @@ public class AuthController {
         return new ResponseEntity<>(response,status);
     }
 
-    @GetMapping("/random")
-    public String randomStuff(){
-        return "JWT Hợp lệ mới có thể thấy được message này";
-    }
-
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<Map<String, String>>> handleValidationException(MethodArgumentNotValidException ex) {

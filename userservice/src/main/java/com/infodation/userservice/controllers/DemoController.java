@@ -21,31 +21,31 @@ public class DemoController {
     private static final Logger log = LoggerFactory.getLogger(DemoController.class);
 
     @GetMapping("/hello")
-    public String hello(@RequestHeader(HttpHeaders.AUTHORIZATION) String token) {
+    public String hello(@RequestBody String schema) {
         // Create schema service client
         ManagedChannel channel = ManagedChannelBuilder.forTarget("localhost:50051").usePlaintext().build();
         BearerToken bearerToken = new BearerToken("foobar");
         SchemaServiceGrpc.SchemaServiceBlockingStub
                 schemaService = SchemaServiceGrpc.newBlockingStub(channel).withCallCredentials(bearerToken);
 
-        String schema =
-                "definition user {}\n" +
-                        "\n" +
-                        "definition task {\n" +
-                        "    relation create_by: user\n" +
-                        "}\n" +
-                        "\n" +
-                        "definition role {\n" +
-                        "    relation has_role: user\n" +
-                        "}\n" +
-                        "\n" +
-                        "definition admin_role {\n" +
-                        "    relation grants: role\n" +
-                        "}\n" +
-                        "\n" +
-                        "definition normal_role {\n" +
-                        "    relation grants: role\n" +
-                        "}";
+//        String schema =
+//                "definition user {}\n" +
+//                        "\n" +
+//                        "definition task {\n" +
+//                        "    relation create_by: user\n" +
+//                        "}\n" +
+//                        "\n" +
+//                        "definition role {\n" +
+//                        "    relation has_role: user\n" +
+//                        "}\n" +
+//                        "\n" +
+//                        "definition admin_role {\n" +
+//                        "    relation grants: role\n" +
+//                        "}\n" +
+//                        "\n" +
+//                        "definition normal_role {\n" +
+//                        "    relation grants: role\n" +
+//                        "}";
 
 
         try {
@@ -56,6 +56,29 @@ public class DemoController {
             return "Current schema:\n" + response.getSchemaText();
         } catch (Exception e) {
             return "Lỗi khi đọc schema: " + e.getMessage();
+        } finally {
+            channel.shutdown();
+        }
+    }
+
+    @PostMapping("/schema")
+    public String writeSchema(@RequestBody String schema) {
+        // Create schema service client
+        ManagedChannel channel = ManagedChannelBuilder.forTarget("localhost:50051").usePlaintext().build();
+        BearerToken bearerToken = new BearerToken("foobar");
+        SchemaServiceGrpc.SchemaServiceBlockingStub
+                schemaService = SchemaServiceGrpc.newBlockingStub(channel).withCallCredentials(bearerToken);
+
+        try {
+            WriteSchemaRequest request = WriteSchemaRequest.newBuilder()
+                    .setSchema(schema)
+                    .build();
+            WriteSchemaResponse response = schemaService.writeSchema(request);
+
+            // Show current schema
+            return "Schema updated successfully";
+        } catch (Exception e) {
+            return "Has error during update schema " + e.getMessage();
         } finally {
             channel.shutdown();
         }
